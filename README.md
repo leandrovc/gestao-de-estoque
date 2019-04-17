@@ -1,2 +1,2 @@
 # gestao-de-estoque
-Aplicação para gerenciamento de produtos em estoque
+Aplicação para gerenciamento de materiais em estoque
