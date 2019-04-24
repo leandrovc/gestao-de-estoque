@@ -1,16 +1,25 @@
 <template>
-  <div class="white elevation-2">
-    <v-toolbar flat dense class="green" dark>
-      <v-toolbar-title>{{title}}</v-toolbar-title>
+  <v-layout
+    class="white elevation-2"
+    column
+  >
+    <v-toolbar
+      flat
+      dense
+      class="secondary"
+    >
+      <v-toolbar-title>{{ title }}</v-toolbar-title>
       <slot name="action" />
     </v-toolbar>
 
-    <div class="pl-4 pr-4 pt-2 pb-2">
+    <v-flex
+      class="pl-4 pr-4 pt-4 pb-2"
+    >
       <slot>
         Nenhum conteúdo definido.
       </slot>
-    </div>
-  </div>
+    </v-flex>
+  </v-layout>
 </template>
 
 <script>

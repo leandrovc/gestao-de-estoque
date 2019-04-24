@@ -10,12 +10,11 @@ module.exports = (sequelize, DataTypes) => {
     },
     code: {
       type: DataTypes.STRING(5),
-      allowNull: false,
-      unique: true
+      allowNull: false
     },
     currentQuantity: {
       type: DataTypes.DECIMAL(6, 2),
-      allowNull: false
+      defaultValue: 0
     },
     minimumQuantity: {
       type: DataTypes.DECIMAL(6, 2),

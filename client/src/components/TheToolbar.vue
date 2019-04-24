@@ -16,7 +16,10 @@
     <v-spacer />
 
     <v-toolbar-items>
-      <v-btn flat>
+      <v-btn
+        flat
+        to="/materials"
+      >
         Materiais
       </v-btn>
       <v-btn flat>

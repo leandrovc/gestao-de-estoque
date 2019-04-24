@@ -1,7 +1,20 @@
 <template>
   <v-layout column>
-    <v-flex xs6>
+    <v-flex>
       <title-panel title="MATERIAIS">
+        <v-btn
+          slot="action"
+          to="materials/create"
+          class="accent"
+          light
+          medium
+          absolute
+          right
+          middle
+          fab
+        >
+          <v-icon>add</v-icon>
+        </v-btn>
         <div
           v-for="material in materials"
           :key="material.id"
