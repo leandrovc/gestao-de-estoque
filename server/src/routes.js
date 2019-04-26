@@ -5,4 +5,6 @@ module.exports = (app) => {
     MaterialsController.index)
   app.post('/materials',
     MaterialsController.post)
+  app.get('/materials/:searchText',
+    MaterialsController.search)
 }

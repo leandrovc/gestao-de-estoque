@@ -16,7 +16,7 @@
       class="pl-4 pr-4 pt-4 pb-2"
     >
       <slot>
-        Nenhum conteúdo definido.
+        Sua busca não retornou nenhum resultado.
       </slot>
     </v-flex>
   </v-layout>

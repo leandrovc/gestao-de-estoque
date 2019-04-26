@@ -9,5 +9,8 @@ export default {
   },
   post (material) {
     return Api().post('materials', material)
+  },
+  search (searchText) {
+    return Api().get(`materials/${searchText}`)
   }
 }
