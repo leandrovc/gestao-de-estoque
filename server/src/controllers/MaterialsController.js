@@ -3,18 +3,6 @@ const { Material } = Db
 const Op = Db.Sequelize.Op
 
 module.exports = {
-  async index (req, res) {
-    try {
-      const materials = await Material.findAll({
-        limit: 25
-      })
-      res.send(materials)
-    } catch (err) {
-      res.status(500).send({
-        error: 'Ocorreu um erro ao tentar buscar os materiais.'
-      })
-    }
-  },
   async show (req, res) {
     try {
       const material = await Material.findByPk(req.params.materialId)
@@ -37,23 +25,23 @@ module.exports = {
   },
   async search (req, res) {
     try {
-      console.log('TESTE', '%' + req.params.searchText + '%')
+      const searchText = req.query['search']
       const material = await Material.findAll({
         where: {
           [Op.or]: [
             {
               description: {
-                [Op.like]: '%' + req.params.searchText + '%'
+                [Op.like]: '%' + searchText + '%'
               }
             },
             {
               group: {
-                [Op.like]: '%' + req.params.searchText + '%'
+                [Op.like]: '%' + searchText + '%'
               }
             },
             {
               code: {
-                [Op.like]: '%' + req.params.searchText + '%'
+                [Op.like]: '%' + searchText + '%'
               }
             }
           ]
@@ -61,7 +49,6 @@ module.exports = {
       })
       res.send(material)
     } catch (err) {
-      console.log(err)
       res.status(500).send({
         error: 'Ocorreu um erro ao tentar buscar o(s) material(is).'
       })

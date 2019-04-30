@@ -29,24 +29,19 @@
           :key="material.id"
           class="material"
         >
-          <v-layout>
-            <v-flex xs6>
-              <div class="material-description">
-                {{ material.description }}
-              </div>
-              <div class="material-code">
-                {{ material.code }}
-              </div>
-              <div class="material-group">
-                {{ material.group }}
-              </div>
-            </v-flex>
-
-            <v-flex xs4>
-              <div class="material-quantity">
-                {{ material.currentQuantity }} {{ material.unit }}
-              </div>
-            </v-flex>
+          <v-layout row>
+            <div class="material-description">
+              {{ material.description }}
+            </div>
+            <div class="material-code">
+              {{ material.code }}
+            </div>
+            <div class="material-group">
+              {{ material.group }}
+            </div>
+            <div class="material-quantity">
+              {{ material.currentQuantity }} {{ material.unit }}
+            </div>
           </v-layout>
         </div>
       </title-panel>

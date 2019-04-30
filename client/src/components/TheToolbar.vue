@@ -10,7 +10,7 @@
     >
 
     <v-toolbar-title>
-      Gestão de Materiais
+      Gestão de Estoque
     </v-toolbar-title>
 
     <v-spacer />

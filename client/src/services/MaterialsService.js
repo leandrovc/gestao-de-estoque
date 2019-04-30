@@ -1,9 +1,6 @@
 import Api from './Api'
 
 export default {
-  index () {
-    return Api().get('materials')
-  },
   show (materialId) {
     return Api().get(`materials/${materialId}`)
   },
@@ -11,6 +8,6 @@ export default {
     return Api().post('materials', material)
   },
   search (searchText) {
-    return Api().get(`materials/${searchText}`)
+    return Api().get(`materials?search=${searchText}`)
   }
 }
