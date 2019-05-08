@@ -9,5 +9,14 @@ export default {
   },
   search (searchText) {
     return Api().get(`materials?search=${searchText}`)
+  },
+  getLatest () {
+    return Api().get('materials=getLatest')
+  },
+  update (materialId, material) {
+    return Api().put(`materials/${materialId}`, material)
+  },
+  delete (materialId) {
+    return Api().delete(`materials/${materialId}`)
   }
 }

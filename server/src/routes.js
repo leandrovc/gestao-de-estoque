@@ -7,4 +7,10 @@ module.exports = (app) => {
     MaterialsController.search)
   app.get('/materials/:materialId',
     MaterialsController.show)
+  app.get('/materials=getLatest',
+    MaterialsController.getLatest)
+  app.put('/materials/:materialId',
+    MaterialsController.update)
+  app.delete('/materials/:materialId',
+    MaterialsController.delete)
 }
