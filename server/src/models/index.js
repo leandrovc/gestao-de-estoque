@@ -19,4 +19,10 @@ fs
 db.sequelize = sequelize
 db.Sequelize = Sequelize
 
+db.Address.belongsTo(db.Supplier)
+db.Supplier.hasOne(db.Address)
+
+db.Telephone.belongsTo(db.Supplier)
+db.Supplier.hasMany(db.Telephone)
+
 module.exports = db
