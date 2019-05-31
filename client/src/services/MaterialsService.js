@@ -1,14 +1,14 @@
 import Api from './Api'
 
 export default {
-  show (materialId) {
-    return Api().get(`materials/${materialId}`)
-  },
-  post (material) {
+  create (material) {
     return Api().post('materials', material)
   },
   search (searchText) {
     return Api().get(`materials?search=${searchText}`)
+  },
+  show (materialId) {
+    return Api().get(`materials/${materialId}`)
   },
   getLatest () {
     return Api().get('materials=getLatest')

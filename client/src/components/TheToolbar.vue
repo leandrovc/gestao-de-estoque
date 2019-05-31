@@ -25,7 +25,10 @@
       <v-btn flat>
         Notas Fiscais
       </v-btn>
-      <v-btn flat>
+      <v-btn
+        flat
+        to="/suppliers"
+      >
         Fornecedores
       </v-btn>
       <v-btn flat>

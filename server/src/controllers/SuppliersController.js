@@ -26,6 +26,7 @@ module.exports = {
       )
       res.send(supplier)
     } catch (err) {
+      // TODO handle SequelizeUniqueConstraintError
       res.status(500).send({
         error: 'Ocorreu um erro ao tentar criar o fornecedor.'
       })
@@ -49,7 +50,7 @@ module.exports = {
       })
     }
   },
-  async findAll (req, res) {
+  async showAll (req, res) {
     try {
       let supplier = await Supplier.findAll({
         order: Db.sequelize.literal('id DESC'),

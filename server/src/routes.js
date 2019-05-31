@@ -4,7 +4,7 @@ const TelephonesController = require('./controllers/TelephonesController')
 
 module.exports = (app) => {
   app.post('/materials',
-    MaterialsController.post)
+    MaterialsController.create)
   app.get('/materials?',
     MaterialsController.search)
   app.get('/materials/:materialId',
@@ -22,8 +22,8 @@ module.exports = (app) => {
     SuppliersController.search)
   app.get('/suppliers/:supplierId',
     SuppliersController.show)
-  app.get('/suppliers=findAll',
-    SuppliersController.findAll)
+  app.get('/suppliers=showAll',
+    SuppliersController.showAll)
   app.put('/suppliers/:supplierId',
     SuppliersController.update)
   app.delete('/suppliers/:supplierId',

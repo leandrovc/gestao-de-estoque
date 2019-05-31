@@ -13,7 +13,7 @@ module.exports = {
       })
     }
   },
-  async post (req, res) {
+  async create (req, res) {
     try {
       let material = await Material.create(req.body)
       res.send(material)
