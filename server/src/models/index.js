@@ -25,4 +25,7 @@ db.Supplier.hasOne(db.Address)
 db.Telephone.belongsTo(db.Supplier)
 db.Supplier.hasMany(db.Telephone)
 
+db.Material.belongsToMany(db.Request, { through: db.MaterialRequests })
+db.Request.belongsToMany(db.Material, { through: db.MaterialRequests })
+
 module.exports = db

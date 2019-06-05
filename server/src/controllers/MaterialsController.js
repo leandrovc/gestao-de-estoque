@@ -95,5 +95,12 @@ module.exports = {
         error: 'Ocorreu um erro ao tentar excluir o material.'
       })
     }
+  },
+  async find (id) {
+    try {
+      return await Material.findByPk(id)
+    } catch (err) {
+      console.log('Ocorreu um erro ao tentar buscar o material.', err)
+    }
   }
 }

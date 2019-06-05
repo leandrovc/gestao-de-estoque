@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-  const PurchaseData = sequelize.define('PurchaseData', {
+  const MaterialInvoices = sequelize.define('MaterialInvoices', {
     brand: {
       type: DataTypes.STRING
     },
@@ -14,5 +14,5 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     timestamps: false
   })
-  return PurchaseData
+  return MaterialInvoices
 }

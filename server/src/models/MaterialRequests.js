@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-  const RequestData = sequelize.define('RequestData', {
+  const MaterialRequests = sequelize.define('MaterialRequests', {
     quantity: {
       type: DataTypes.DECIMAL(6, 2),
       allowNull: false
@@ -7,5 +7,5 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     timestamps: false
   })
-  return RequestData
+  return MaterialRequests
 }
