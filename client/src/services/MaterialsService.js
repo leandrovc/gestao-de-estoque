@@ -7,6 +7,9 @@ export default {
   search (searchText) {
     return Api().get(`materials?search=${searchText}`)
   },
+  searchDescription (searchText) {
+    return Api().get(`materials=searchDescription?search=${searchText}`)
+  },
   show (materialId) {
     return Api().get(`materials/${materialId}`)
   },

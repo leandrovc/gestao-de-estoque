@@ -18,7 +18,7 @@
     "mariadb": "^2.0.3",
     "morgan": "^1.9.1",
     "sequelize": "^5.3.0",
-    "sequelize-cli": "^5.4.0"
+    "sequelize-cli": "^5.5.0"
   },
   "devDependencies": {
     "eslint": "^5.16.0",

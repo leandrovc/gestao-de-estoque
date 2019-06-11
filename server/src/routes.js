@@ -8,6 +8,8 @@ module.exports = (app) => {
     MaterialsController.create)
   app.get('/materials?',
     MaterialsController.search)
+  app.get('/materials=searchDescription?',
+    MaterialsController.searchDescription)
   app.get('/materials/:materialId',
     MaterialsController.show)
   app.get('/materials=getLatest',
@@ -45,6 +47,6 @@ module.exports = (app) => {
     RequestsController.update)
   app.delete('/requests/:requestId',
     RequestsController.delete)
-  app.get('/requests=getAttribute?',
-    RequestsController.getAttribute)
+  app.get('/requests=getAttributeOptions?',
+    RequestsController.getAttributeOptions)
 }

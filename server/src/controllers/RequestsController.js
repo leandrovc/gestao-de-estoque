@@ -45,9 +45,10 @@ module.exports = {
       })
     }
   },
-  async getAttribute (req, res) {
+  async getAttributeOptions (req, res) {
     try {
-      let attribute = req.query['attribute']
+      const attribute = req.query['attribute']
+      const index = req.query['index']
       /* Request.aggregate(attribute,
         'distinct',
         { plain: false }
@@ -55,10 +56,10 @@ module.exports = {
         res.send(result)
       }) */
       Request.findAll({
-        attributes: [[ attribute, 'value' ]],
+        attributes: [[ attribute, index ]],
         group: [ attribute ]
-      }).then(r => {
-        res.send(r)
+      }).then(data => {
+        res.send(data)
       })
     } catch (err) {
       res.status(500).send({
@@ -84,10 +85,8 @@ module.exports = {
           [Op.and]: filter
         },
         include: [{
-          model: Material,
-          attributes: [ 'description' ]
-        }],
-        attributes: [ 'authorizer', 'applicant' ]
+          model: Material
+        }]
       })
       res.send(request)
     } catch (err) {

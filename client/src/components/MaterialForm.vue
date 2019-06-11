@@ -65,7 +65,8 @@
                 <v-text-field
                   v-model="editedItem.currentQuantity"
                   label="Quant. atual"
-                  placeholder="9999.99"
+                  hint="9999.99"
+                  persistent-hint
                   reverse
                   :rules="[required]"
                   required
@@ -75,7 +76,8 @@
                 <v-text-field
                   v-model="editedItem.minimumQuantity"
                   label="Quant. mínima"
-                  placeholder="9999.99"
+                  hint="9999.99"
+                  persistent-hint
                   reverse
                   :rules="[required]"
                   required

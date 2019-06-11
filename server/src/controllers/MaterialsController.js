@@ -54,6 +54,24 @@ module.exports = {
       })
     }
   },
+  async searchDescription (req, res) {
+    try {
+      let searchText = req.query['search']
+      let material = await Material.findAll({
+        attributes: [ 'id', 'description' ],
+        where: {
+          description: {
+            [Op.like]: '%' + searchText + '%'
+          }
+        }
+      })
+      res.send(material)
+    } catch (err) {
+      res.status(500).send({
+        error: 'Ocorreu um erro ao tentar buscar o(s) material(is).'
+      })
+    }
+  },
   async getLatest (req, res) {
     try {
       let material = await Material.findAll({

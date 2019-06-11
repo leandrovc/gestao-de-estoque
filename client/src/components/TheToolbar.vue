@@ -31,7 +31,10 @@
       >
         Fornecedores
       </v-btn>
-      <v-btn flat>
+      <v-btn
+        flat
+        to="/requests"
+      >
         Requisições
       </v-btn>
     </v-toolbar-items>
