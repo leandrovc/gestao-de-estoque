@@ -19,13 +19,16 @@
             fab
             @click="form = !form"
           >
-            <v-icon>add</v-icon>
+            <v-icon>{{ form ? 'undo' : 'add' }}</v-icon>
           </v-btn>
         </v-toolbar>
         <request-form
           v-if="form"
+          :request="editingRequest"
           :applicants="applicants"
           :authorizers="authorizers"
+          @save="loadRequestsTable"
+          @close="closeForm"
         />
         <requests-filter
           v-if="!form"
@@ -37,6 +40,8 @@
           v-if="!form"
           :requests="requests"
           :loading="loading"
+          @edit-item="editItem"
+          @delete-item="deleteItem"
         />
       </div>
     </v-flex>
@@ -60,6 +65,7 @@ export default {
     return {
       form: false,
       loading: true,
+      editingRequest: null,
       requests: [],
       applicants: [],
       authorizers: []
@@ -67,13 +73,13 @@ export default {
   },
 
   mounted () {
-    this.getRequests()
-    this.getComboboxItems()
+    this.loadRequestsTable()
   },
 
   methods: {
     editItem (item) {
-      this.$refs.requestForm.editItem(item)
+      this.editingRequest = this.requests[this.requests.indexOf(item)]
+      this.form = true
     },
 
     deleteItem (item) {
@@ -98,6 +104,15 @@ export default {
     async getComboboxItems () {
       this.applicants = await RequestsService.getAttributeOptions('applicant')
       this.authorizers = await RequestsService.getAttributeOptions('authorizer')
+    },
+    loadRequestsTable () {
+      this.getRequests()
+      this.getComboboxItems()
+      this.closeForm()
+    },
+    closeForm () {
+      this.editingRequest = null
+      this.form = false
     }
   }
 }

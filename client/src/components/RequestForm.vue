@@ -30,6 +30,7 @@
                   mask="###.###"
                   :rules="[required]"
                   required
+                  autofocus
                 />
               </v-flex>
               <v-flex xs3>
@@ -108,14 +109,15 @@
               v-for="(material, index) in editedMaterials"
               :key="material.id"
               xs12
+              align-center
             >
               <v-flex xs9>
                 <select-material
                   :material-selected="material"
                   :material-selected-index="index"
-                  @replace-material="replaceMaterial"
                   :rules="[required]"
                   required
+                  @material-selected="replaceMaterial"
                 />
               </v-flex>
               <v-spacer />
@@ -176,6 +178,10 @@ export default {
     SelectMaterial
   },
   props: {
+    request: {
+      type: Object,
+      default: null
+    },
     applicants: {
       type: Array,
       required: true
@@ -218,20 +224,26 @@ export default {
     }
   },
   mounted () {
-    console.log('mounted')
+    if (this.request) {
+      this.editedRequest = this.request
+      if (this.editedRequest.Materials.length > 0) {
+        this.editedMaterials = this.request.Materials
+        this.editedMaterials.forEach(m => {
+          m.quantity = m.MaterialRequests.quantity
+        })
+      }
+      this.editedIndex = this.request.id
+    }
   },
   methods: {
     editItem (item) {
-      this.editedIndex = item.id
       this.editedRequest = Object.assign({}, item)
     },
     close () {
-      setTimeout(() => {
-        this.editedIndex = -1
-        this.$refs.form.reset()
-      }, 300)
+      this.$emit('close')
     },
     async save () {
+      this.editedRequest.Materials = this.editedMaterials
       if (this.$refs.form.validate()) {
         try {
           if (this.editedIndex > -1) {
@@ -239,7 +251,7 @@ export default {
           } else {
             await RequestsService.create(this.editedRequest)
           }
-          this.close()
+          this.$emit('save')
         } catch (err) {
           console.log(err)
         }

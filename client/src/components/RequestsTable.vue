@@ -14,6 +14,21 @@
         <td>{{ props.item.applicant }}</td>
         <td>{{ props.item.authorizer }}</td>
         <td>{{ props.item.comments }}</td>
+        <td class="justify-center layout px-0">
+          <v-icon
+            small
+            class="mr-2"
+            @click="editItem(props.item)"
+          >
+            edit
+          </v-icon>
+          <v-icon
+            small
+            @click="deleteItem(props.item)"
+          >
+            delete
+          </v-icon>
+        </td>
       </tr>
     </template>
     <template v-slot:no-data>
@@ -73,8 +88,18 @@ export default {
         { text: 'Data de Emissão', value: 'issueDate' },
         { text: 'Requerente', value: 'applicant' },
         { text: 'Autorizador', value: 'authorizer' },
-        { text: 'Comentários', value: 'comments' }
+        { text: 'Comentários', value: 'comments' },
+        { text: 'Ações', value: 'id', sortable: false }
       ]
+    }
+  },
+  methods: {
+    editItem (item) {
+      this.$emit('edit-item', item)
+    },
+
+    deleteItem (item) {
+      this.$emit('delete-item', item)
     }
   }
 }
@@ -82,7 +107,7 @@ export default {
 
 <style scoped>
 .quantity {
-  color: red;
+  color: #005300;
   font-weight: bold;
 }
 </style>

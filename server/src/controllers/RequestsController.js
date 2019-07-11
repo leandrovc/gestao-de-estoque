@@ -22,7 +22,7 @@ module.exports = {
       let request = await Request.create(
         requestData
       )
-      let addMaterialsToRequest = requestData.Materials.reduce(
+      requestData.Materials.reduce(
         (promiseChain, materialData) => {
           return promiseChain.then(() => new Promise((resolve) => {
             MaterialsController.find(materialData.id).then(material => {
@@ -35,10 +35,9 @@ module.exports = {
           }))
         },
         Promise.resolve()
-      )
-      addMaterialsToRequest.then(() => {
+      ).then(
         res.send(request)
-      })
+      )
     } catch (err) {
       res.status(500).send({
         error: 'Ocorreu um erro ao tentar criar a requisição.'
@@ -111,12 +110,30 @@ module.exports = {
   },
   async update (req, res) {
     try {
+      let requestData = req.body
       await Request.update(req.body, {
         where: {
           id: req.params.requestId
         }
       })
-      res.send('Requisição atualizada!')
+      let request = await Request.findByPk(req.params.requestId)
+      request.setMaterials([])
+        .then(requestData.Materials.reduce(
+          (promiseChain, materialData) => {
+            return promiseChain.then(() => new Promise((resolve) => {
+              MaterialsController.find(materialData.id).then(material => {
+                request.addMaterial(material, {
+                  through: { quantity: materialData.quantity }
+                }).then(() => {
+                  resolve()
+                })
+              })
+            }))
+          },
+          Promise.resolve()
+        ).then(() => {
+          res.send('Requisição atualizada!')
+        }))
     } catch (err) {
       console.log(err)
       res.status(500).send({

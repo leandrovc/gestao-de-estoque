@@ -1,112 +1,83 @@
 <template>
-  <v-dialog
-    v-model="dialog"
-    max-width="700px"
-  >
-    <template v-slot:activator="{ on }">
-      <v-layout wrap>
-        <v-text-field
-          v-model="materialSelected.description"
-          placeholder="Selecionar"
-          single-line
-          hide-details
-          readonly
-          v-on="on"
+  <v-container grid-list-md>
+    <v-layout
+      row
+      wrap
+    >
+      <v-flex xs10>
+        <v-autocomplete
+          v-if="editing"
+          :loading="loading"
+          :items="materials"
+          :search-input.sync="search"
+          label="Descrição"
+          cache-items
+          item-text="description"
+          item-value="id"
+          hide-no-data
+          hide-selected
+          return-object
+          :rules="rules"
+          required
+          @input="input"
         />
-        <v-icon v-on="on">
-          search
+        <v-text-field
+          v-if="!editing"
+          v-model="selectedItem.description"
+          label="Descrição"
+          readonly
+          :disabled="selectedItem.description === ''"
+          :rules="rules"
+          required
+        />
+      </v-flex>
+      <v-flex xs2>
+        <v-icon @click="editing = !editing">
+          edit
         </v-icon>
-      </v-layout>
-    </template>
-    <v-card>
-      <v-card-title>
-        <span class="headline">
-          Selecionar Material
-        </span>
-      </v-card-title>
-
-      <v-card-text>
-        <v-container grid-list-md>
-          <v-layout
-            row
-            wrap
-          >
-            <v-flex xs12>
-              <v-autocomplete
-                :loading="loading"
-                :items="materials"
-                :search-input.sync="search"
-                item-text="description"
-                item-value="id"
-                :placeholder="selectedItem.description"
-                clearable
-                autofocus
-                @input="input"
-              />
-            </v-flex>
-            <v-flex xs2>
-              <v-text-field
-                v-model="selectedItem.group"
-                label="Grupo"
-                readonly
-                disabled
-              />
-            </v-flex>
-            <v-flex xs2>
-              <v-text-field
-                v-model="selectedItem.code"
-                label="Código"
-                readonly
-                disabled
-              />
-            </v-flex>
-            <v-flex xs3>
-              <v-text-field
-                v-model="selectedItem.currentQuantity"
-                label="Quant. atual"
-                readonly
-                disabled
-              />
-            </v-flex>
-            <v-flex xs3>
-              <v-text-field
-                v-model="selectedItem.minimumQuantity"
-                label="Quant. mínima"
-                readonly
-                disabled
-              />
-            </v-flex>
-            <v-flex xs2>
-              <v-text-field
-                v-model="selectedItem.unit"
-                label="Unidade"
-                readonly
-                disabled
-              />
-            </v-flex>
-          </v-layout>
-        </v-container>
-      </v-card-text>
-
-      <v-card-actions>
-        <v-spacer />
-        <v-btn
-          color="blue darken-1"
-          flat
-          @click="close"
-        >
-          Cancelar
-        </v-btn>
-        <v-btn
-          color="blue darken-1"
-          flat
-          @click="save"
-        >
-          Confirmar
-        </v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
+      </v-flex>
+      <v-flex xs2>
+        <v-text-field
+          v-model="selectedItem.group"
+          label="Grupo"
+          readonly
+          :disabled="selectedItem.description === ''"
+        />
+      </v-flex>
+      <v-flex xs2>
+        <v-text-field
+          v-model="selectedItem.code"
+          label="Código"
+          readonly
+          :disabled="selectedItem.description === ''"
+        />
+      </v-flex>
+      <v-flex xs2>
+        <v-text-field
+          v-model="selectedItem.currentQuantity"
+          label="Quant. atual"
+          readonly
+          :disabled="selectedItem.description === ''"
+        />
+      </v-flex>
+      <v-flex xs2>
+        <v-text-field
+          v-model="selectedItem.minimumQuantity"
+          label="Quant. mínima"
+          readonly
+          :disabled="selectedItem.description === ''"
+        />
+      </v-flex>
+      <v-flex xs2>
+        <v-text-field
+          v-model="selectedItem.unit"
+          label="Unidade"
+          readonly
+          :disabled="selectedItem.description === ''"
+        />
+      </v-flex>
+    </v-layout>
+  </v-container>
 </template>
 
 <script>
@@ -121,11 +92,15 @@ export default {
     materialSelectedIndex: {
       type: Number,
       required: true
+    },
+    rules: {
+      type: Array,
+      required: true
     }
   },
   data () {
     return {
-      dialog: false,
+      editing: false,
       loading: false,
       materials: [],
       search: null,
@@ -141,23 +116,17 @@ export default {
     }
   },
   watch: {
-    dialog (value) {
-      value && this.selectItem(this.materialSelected)
-    },
     search (searchText) {
       searchText && searchText !== '' && this.searchMaterials(searchText)
     }
   },
+  mounted () {
+    this.selectedItem = Object.assign({}, this.materialSelected)
+  },
   methods: {
-    selectItem (item) {
-      this.selectedItem = item
-    },
-    close () {
-      this.dialog = false
-    },
-    save () {
-      this.$emit('replace-material', this.selectedItem, this.materialSelectedIndex)
-      this.close()
+    selectMaterial (materialData) {
+      this.selectedItem = Object.assign({}, materialData)
+      this.$emit('material-selected', materialData, this.materialSelectedIndex)
     },
     searchMaterials (searchText) {
       if (this.searchTimeout !== null) {
@@ -167,12 +136,13 @@ export default {
       this.searchTimeout = setTimeout(async () => {
         this.materials = (await MaterialsService.searchDescription(searchText)).data
         this.loading = false
-      }, 1000)
+      }, 500)
     },
-    async input (itemId) {
-      if (!itemId) return
+    async input (material) {
+      if (!material) return
       this.loading = true
-      this.selectItem((await MaterialsService.show(itemId)).data)
+      this.selectMaterial((await MaterialsService.show(material.id)).data)
+      this.editing = false
       this.loading = false
     }
   }
