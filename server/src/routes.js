@@ -2,6 +2,7 @@ const MaterialsController = require('./controllers/MaterialsController')
 const SuppliersController = require('./controllers/SuppliersController')
 const TelephonesController = require('./controllers/TelephonesController')
 const RequestsController = require('./controllers/RequestsController')
+const InvoicesController = require('./controllers/InvoicesController')
 
 module.exports = (app) => {
   app.post('/materials',
@@ -49,4 +50,17 @@ module.exports = (app) => {
     RequestsController.delete)
   app.get('/requests=getAttributeOptions?',
     RequestsController.getAttributeOptions)
+
+  app.post('/invoices',
+    InvoicesController.create)
+  app.get('/invoices?',
+    InvoicesController.search)
+  app.get('/invoices/:invoiceId',
+    InvoicesController.show)
+  app.get('/invoices=showAll',
+    InvoicesController.showAll)
+  app.put('/invoices/:invoiceId',
+    InvoicesController.update)
+  app.delete('/invoices/:invoiceId',
+    InvoicesController.delete)
 }

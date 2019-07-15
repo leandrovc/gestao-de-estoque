@@ -135,7 +135,6 @@ module.exports = {
           res.send('Requisição atualizada!')
         }))
     } catch (err) {
-      console.log(err)
       res.status(500).send({
         error: 'Ocorreu um erro ao tentar atualizar a requisição.'
       })
