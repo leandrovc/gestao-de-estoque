@@ -22,7 +22,10 @@
       >
         Materiais
       </v-btn>
-      <v-btn flat>
+      <v-btn
+        flat
+        to="/invoices"
+      >
         Notas Fiscais
       </v-btn>
       <v-btn

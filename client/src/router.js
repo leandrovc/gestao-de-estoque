@@ -4,6 +4,7 @@ import Home from './views/Home.vue'
 import Materials from './views/Materials.vue'
 import Suppliers from './views/Suppliers.vue'
 import Requests from './views/Requests.vue'
+import Invoices from './views/Invoices.vue'
 
 Vue.use(Router)
 
@@ -28,6 +29,11 @@ export default new Router({
       path: '/requests',
       name: 'requests',
       component: Requests
+    },
+    {
+      path: '/invoices',
+      name: 'invoices',
+      component: Invoices
     }
   ]
 })
