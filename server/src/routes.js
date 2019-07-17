@@ -24,6 +24,8 @@ module.exports = (app) => {
     SuppliersController.create)
   app.get('/suppliers?',
     SuppliersController.search)
+  app.get('/suppliers=searchSocialName?',
+    SuppliersController.searchSocialName)
   app.get('/suppliers/:supplierId',
     SuppliersController.show)
   app.get('/suppliers=showAll',

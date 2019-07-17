@@ -50,6 +50,24 @@ module.exports = {
       })
     }
   },
+  async searchSocialName (req, res) {
+    try {
+      let searchText = req.query['search']
+      let suppliers = await Supplier.findAll({
+        attributes: [ 'id', 'socialName' ],
+        where: {
+          socialName: {
+            [Op.like]: '%' + searchText + '%'
+          }
+        }
+      })
+      res.send(suppliers)
+    } catch (err) {
+      res.status(500).send({
+        error: 'Ocorreu um erro ao tentar buscar o fornecedor.'
+      })
+    }
+  },
   async showAll (req, res) {
     try {
       let supplier = await Supplier.findAll({

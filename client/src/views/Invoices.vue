@@ -22,6 +22,10 @@
             <v-icon>{{ form ? 'undo' : 'add' }}</v-icon>
           </v-btn>
         </v-toolbar>
+        <invoices-filter
+          v-if="!form"
+          @search-invoices="searchInvoices"
+        />
         <invoices-table
           v-if="!form"
           :invoices="invoices"
@@ -35,10 +39,12 @@
 <script>
 import InvoicesService from '@/services/InvoicesService'
 import InvoicesTable from '@/components/InvoicesTable'
+import InvoicesFilter from '@/components/InvoicesFilter'
 
 export default {
   components: {
-    InvoicesTable
+    InvoicesTable,
+    InvoicesFilter
   },
   data () {
     return {
@@ -54,12 +60,16 @@ export default {
     this.loading = false
   },
   methods: {
-    async getInvoices () {
+    async getAllInvoices () {
       this.invoices = (await InvoicesService.showAll()).data
-      console.log(this.invoices)
+    },
+    async searchInvoices (filter) {
+      this.loading = true
+      this.invoices = (await InvoicesService.search(filter)).data
+      this.loading = false
     },
     loadInvoicesTable () {
-      this.getInvoices()
+      this.getAllInvoices()
     }
   }
 }

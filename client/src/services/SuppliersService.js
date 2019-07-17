@@ -7,6 +7,9 @@ export default {
   search (searchText) {
     return Api().get(`suppliers?search=${searchText}`)
   },
+  searchSocialName (searchText) {
+    return Api().get(`suppliers=searchSocialName?search=${searchText}`)
+  },
   show (supplierId) {
     return Api().get(`suppliers/${supplierId}`)
   },

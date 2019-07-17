@@ -10,7 +10,7 @@ export default {
 
     function filterToString (index) {
       const filterValue = filter[index]
-      if (filterValue !== '' && filterValue !== null) {
+      if (filterValue !== undefined && filterValue !== '') {
         filterString = filterString + `&${index}=${filterValue}`
       }
     }

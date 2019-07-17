@@ -6,7 +6,18 @@ export default {
   },
 
   search (filter) {
-    const filterString = `initialDate=${filter.initialDate}&finalDate=${filter.finalDate}`
+    let filterString = `initialDate=${filter.initialDate}&finalDate=${filter.finalDate}`
+
+    function filterToString (index) {
+      const filterValue = filter[index]
+      if (filterValue !== undefined && filterValue !== '') {
+        filterString = filterString + `&${index}=${filterValue}`
+      }
+    }
+
+    filterToString('number')
+    filterToString('SupplierId')
+    filterToString('MaterialId')
     return Api().get(`invoices?${filterString}`)
   },
 

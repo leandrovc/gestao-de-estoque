@@ -1,5 +1,5 @@
 const Db = require('../models/index')
-const { Invoice, Material, /* MaterialInvoices, */Supplier } = Db
+const { Invoice, Material, Supplier } = Db
 const Op = Db.Sequelize.Op
 const MaterialsController = require('./MaterialsController')
 
@@ -49,6 +49,7 @@ module.exports = {
   async search (req, res) {
     try {
       let filter = req.query
+      // Set issueDate clause
       filter.issueDate = {
         [Op.gte]: filter.initialDate,
         [Op.lte]: filter.finalDate
@@ -57,7 +58,30 @@ module.exports = {
       filter.finalDate = null
       delete filter.initialDate
       delete filter.finalDate
-
+      // Find Invoices with queued Material
+      if (filter.MaterialId !== undefined && filter.MaterialId !== null) {
+        let invoices = await Invoice.findAll({
+          include: [
+            { model: Material,
+              where: {
+                id: filter.MaterialId
+              }
+            }
+          ],
+          through: { attributes: ['id'] }
+        })
+        if (invoices.length > 0) {
+          filter.id = []
+          invoices.forEach(i => {
+            filter.id.push(i.dataValues.id)
+          })
+        } else {
+          res.send(invoices)
+          return
+        }
+        filter.MaterialId = null
+        delete filter.MaterialId
+      }
       let invoice = await Invoice.findAll({
         order: Db.sequelize.literal('id DESC'),
         where: {
