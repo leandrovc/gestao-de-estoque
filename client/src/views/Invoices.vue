@@ -30,6 +30,7 @@
           v-if="!form"
           :invoices="invoices"
           :loading="loading"
+          @delete-item="deleteItem"
         />
       </div>
     </v-flex>
@@ -70,6 +71,12 @@ export default {
     },
     loadInvoicesTable () {
       this.getAllInvoices()
+    },
+    deleteItem (item) {
+      const index = this.invoices.indexOf(item)
+      confirm(`Tem certeza de que deseja EXCLUIR ${item.number}?`) &&
+      InvoicesService.delete(item.id) &&
+      this.invoices.splice(index, 1)
     }
   }
 }

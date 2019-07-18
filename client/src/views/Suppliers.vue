@@ -130,7 +130,7 @@ export default {
 
     deleteItem (item) {
       const index = this.suppliers.indexOf(item)
-      confirm(`Tem certeza de que quer EXCLUIR ${item.socialName}?`) &&
+      confirm(`Tem certeza de que deseja EXCLUIR ${item.socialName}?`) &&
       SuppliersService.delete(item.id) &&
       this.suppliers.splice(index, 1)
     },

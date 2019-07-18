@@ -84,7 +84,7 @@ export default {
 
     deleteItem (item) {
       const index = this.requests.indexOf(item)
-      confirm(`Tem certeza de que quer EXCLUIR ${item.number}?`) &&
+      confirm(`Tem certeza de que deseja EXCLUIR ${item.number}?`) &&
       RequestsService.delete(item.id) &&
       this.requests.splice(index, 1)
     },

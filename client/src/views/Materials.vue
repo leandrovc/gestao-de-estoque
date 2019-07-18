@@ -130,7 +130,7 @@ export default {
 
     deleteItem (item) {
       const index = this.materials.indexOf(item)
-      confirm(`Tem certeza de que quer EXCLUIR ${item.description}?`) &&
+      confirm(`Tem certeza de que deseja EXCLUIR ${item.description}?`) &&
       MaterialsService.delete(item.id) &&
       this.materials.splice(index, 1)
     },

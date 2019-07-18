@@ -267,7 +267,7 @@ export default {
 
     deleteTelephone (telephone) {
       if (telephone.id) {
-        confirm(`Tem certeza de que quer EXCLUIR ${telephone.number}?`) &&
+        confirm(`Tem certeza de que deseja EXCLUIR ${telephone.number}?`) &&
         SuppliersService.deleteTelephone(telephone.id)
       }
       const index = this.editedItem.Telephones.indexOf(telephone)
