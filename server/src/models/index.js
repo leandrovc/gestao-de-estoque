@@ -28,7 +28,7 @@ db.Supplier.hasMany(db.Telephone)
 db.Material.belongsToMany(db.Request, { through: db.MaterialRequests })
 db.Request.belongsToMany(db.Material, { through: db.MaterialRequests })
 
-db.Invoice.belongsTo(db.Supplier)
+db.Invoice.belongsTo(db.Supplier, { foreignKey: { allowNull: false } })
 db.Supplier.hasMany(db.Invoice)
 
 db.Material.belongsToMany(db.Invoice, { through: db.MaterialInvoices })

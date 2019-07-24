@@ -22,6 +22,12 @@
             <v-icon>{{ form ? 'undo' : 'add' }}</v-icon>
           </v-btn>
         </v-toolbar>
+        <invoice-form
+          v-if="form"
+          :invoice="editingInvoice"
+          @save="loadInvoicesTable"
+          @close="closeForm"
+        />
         <invoices-filter
           v-if="!form"
           @search-invoices="searchInvoices"
@@ -31,6 +37,7 @@
           :invoices="invoices"
           :loading="loading"
           @delete-item="deleteItem"
+          @edit-item="editItem"
         />
       </div>
     </v-flex>
@@ -41,24 +48,24 @@
 import InvoicesService from '@/services/InvoicesService'
 import InvoicesTable from '@/components/InvoicesTable'
 import InvoicesFilter from '@/components/InvoicesFilter'
+import InvoiceForm from '@/components/InvoiceForm'
 
 export default {
   components: {
     InvoicesTable,
-    InvoicesFilter
+    InvoicesFilter,
+    InvoiceForm
   },
   data () {
     return {
       form: false,
       loading: true,
-      editingRequest: null,
+      editingInvoice: null,
       invoices: []
     }
   },
   mounted () {
-    this.loading = true
     this.loadInvoicesTable()
-    this.loading = false
   },
   methods: {
     async getAllInvoices () {
@@ -70,13 +77,24 @@ export default {
       this.loading = false
     },
     loadInvoicesTable () {
+      this.loading = true
       this.getAllInvoices()
+      this.closeForm()
+      this.loading = false
+    },
+    editItem (item) {
+      this.editingInvoice = this.invoices[this.invoices.indexOf(item)]
+      this.form = true
     },
     deleteItem (item) {
       const index = this.invoices.indexOf(item)
       confirm(`Tem certeza de que deseja EXCLUIR ${item.number}?`) &&
       InvoicesService.delete(item.id) &&
       this.invoices.splice(index, 1)
+    },
+    closeForm () {
+      this.editingInvoice = null
+      this.form = false
     }
   }
 }

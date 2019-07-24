@@ -71,7 +71,7 @@
               color="error"
               icon="warning"
             >
-              Sua busca por "{{ search }}" não retornou resultados.
+              Sua busca não retornou resultados.
             </v-alert>
           </template>
           <template v-slot:pageText="props">

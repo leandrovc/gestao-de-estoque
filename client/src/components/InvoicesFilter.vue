@@ -205,7 +205,7 @@ export default {
     clear () {
       this.filter = Object.assign({}, this.filterDefault)
     },
-    startsearchTimeout (callback) {
+    startSearchTimeout (callback) {
       if (this.searchTimeout !== null) {
         clearTimeout(this.searchTimeout)
       }
@@ -213,13 +213,13 @@ export default {
       this.searchTimeout = setTimeout(callback, 500)
     },
     searchMaterials (searchText) {
-      this.startsearchTimeout(async () => {
+      this.startSearchTimeout(async () => {
         this.materials = (await MaterialsService.searchDescription(searchText)).data
         this.loading = false
       })
     },
     searchSuppliers (searchText) {
-      this.startsearchTimeout(async () => {
+      this.startSearchTimeout(async () => {
         this.suppliers = (await SuppliersService.searchSocialName(searchText)).data
         this.loading = false
       })
