@@ -13,138 +13,66 @@
             vertical
           />
           <v-spacer />
-          <v-text-field
-            v-model="search"
-            append-icon="search"
-            label="Busca"
-            class="pr-4"
-            single-line
-            hide-details
-            @keyup.enter="searchMaterials"
-            @click:append="searchMaterials"
-          />
-          <material-form ref="materialForm" />
+          <v-btn
+            v-if="!formOpen"
+            color="primary"
+            dark
+            class="mb-2"
+            @click="createMaterial"
+          >
+            Adicionar Material
+          </v-btn>
         </v-toolbar>
-        <v-data-table
-          :headers="headers"
-          :items="materials"
-          :loading="loading"
-          :rows-per-page-text="rowsPerPageText"
-          class="elevation-1"
-        >
-          <template v-slot:items="props">
-            <td>{{ props.item.description }}</td>
-            <td class="text-xs-right">
-              {{ props.item.group }}
-            </td>
-            <td class="text-xs-right">
-              {{ props.item.code }}
-            </td>
-            <td class="text-xs-right">
-              {{ props.item.currentQuantity }}
-            </td>
-            <td class="text-xs-right">
-              {{ props.item.minimumQuantity }}
-            </td>
-            <td class="text-xs-right">
-              {{ props.item.unit }}
-            </td>
-            <td class="justify-center layout px-0">
-              <v-icon
-                small
-                class="mr-2"
-                @click="editItem(props.item)"
-              >
-                edit
-              </v-icon>
-              <v-icon
-                small
-                @click="deleteItem(props.item)"
-              >
-                delete
-              </v-icon>
-            </td>
-          </template>
-          <template v-slot:no-data>
-            <v-alert
-              :value="true"
-              color="error"
-              icon="warning"
-            >
-              Sua busca não retornou resultados.
-            </v-alert>
-          </template>
-          <template v-slot:pageText="props">
-            {{ props.pageStart }} - {{ props.pageStop }} de {{ props.itemsLength }}
-          </template>
-        </v-data-table>
+        <material-search
+          v-if="!formOpen"
+          edit-materials
+          @material-selected="editMaterial"
+        />
+        <material-form
+          v-if="formOpen"
+          :editing-material="formMaterial"
+          @closing="closeForm"
+        />
       </div>
     </v-flex>
   </v-layout>
 </template>
 
 <script>
-import MaterialsService from '@/services/MaterialsService'
 import MaterialForm from '@/components/MaterialForm'
+import MaterialSearch from '@/components/MaterialSearch'
 
 export default {
   components: {
-    MaterialForm
+    MaterialForm,
+    MaterialSearch
   },
-
   data () {
     return {
-      search: '',
-      searchTimer: null,
-      loading: true,
-      headers: [
-        {
-          text: 'Descrição',
-          align: 'left',
-          value: 'description'
-        },
-        { text: 'Grupo', value: 'group' },
-        { text: 'Código', value: 'code' },
-        { text: 'Quant. atual', value: 'currentQuantity' },
-        { text: 'Quant. mínima', value: 'minimumQuantity' },
-        { text: 'Unidade', value: 'unit' },
-        { text: 'Ações', value: 'id', sortable: false }
-      ],
-      rowsPerPageText: 'Linhas por página:',
-      materials: []
+      formOpen: false,
+      formMaterial: null,
+      emptyFormMaterial: {
+        id: null,
+        description: '',
+        group: '',
+        code: '',
+        currentQuantity: null,
+        minimumQuantity: null,
+        unit: 'pc'
+      }
     }
   },
-  mounted () {
-    this.getLatestMaterials()
-    this.$watch(
-      '$refs.materialForm.dialog',
-      (value) => {
-        value || this.getLatestMaterials()
-      }
-    )
-  },
   methods: {
-    editItem (item) {
-      this.$refs.materialForm.editItem(item)
+    editMaterial (material) {
+      this.formMaterial = Object.assign({}, material)
+      this.formOpen = true
     },
-
-    deleteItem (item) {
-      const index = this.materials.indexOf(item)
-      confirm(`Tem certeza de que deseja EXCLUIR ${item.description}?`) &&
-      MaterialsService.delete(item.id) &&
-      this.materials.splice(index, 1)
+    createMaterial () {
+      this.formMaterial = Object.assign({}, this.emptyFormMaterial)
+      this.formOpen = true
     },
-
-    async getLatestMaterials () {
-      this.loading = true
-      this.materials = (await MaterialsService.getLatest()).data
-      this.loading = false
-    },
-
-    async searchMaterials () {
-      this.loading = true
-      this.materials = (await MaterialsService.search(this.search)).data
-      this.loading = false
+    closeForm () {
+      this.formOpen = false
     }
   }
 }
