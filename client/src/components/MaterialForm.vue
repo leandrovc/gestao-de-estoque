@@ -11,11 +11,11 @@
 
       <v-card-text>
         <v-container grid-list-md>
-          <v-layout
-            row
-            wrap
-          >
-            <v-flex xs6>
+          <v-layout>
+            <v-flex
+              offset-xs1
+              xs10
+            >
               <v-text-field
                 v-model="editingMaterial.description"
                 label="Descrição"
@@ -23,7 +23,12 @@
                 required
               />
             </v-flex>
-            <v-flex xs3>
+          </v-layout>
+          <v-layout>
+            <v-flex
+              offset-xs1
+              xs3
+            >
               <v-combobox
                 v-model="editingMaterial.group"
                 :items="groups"
@@ -43,25 +48,24 @@
               />
             </v-flex>
           </v-layout>
-          <v-layout wrap>
-            <v-flex xs3>
+          <v-layout>
+            <v-flex
+              offset-xs1
+              xs4
+            >
               <v-text-field
                 v-model="editingMaterial.currentQuantity"
+                v-mask="['#,##', '##,##', '###,##', '####,##']"
                 label="Quant. atual"
-                hint="9999.99"
-                persistent-hint
-                reverse
                 :rules="[required]"
                 required
               />
             </v-flex>
-            <v-flex xs3>
+            <v-flex xs4>
               <v-text-field
                 v-model="editingMaterial.minimumQuantity"
+                v-mask="['#,##', '##,##', '###,##', '####,##']"
                 label="Quant. mínima"
-                hint="9999.99"
-                persistent-hint
-                reverse
                 :rules="[required]"
                 required
               />
@@ -104,8 +108,12 @@
 
 <script>
 import MaterialsService from '@/services/MaterialsService'
+import { mask } from 'vue-the-mask'
 
 export default {
+  directives: {
+    mask
+  },
   props: {
     editingMaterial: {
       type: Object,
@@ -116,7 +124,9 @@ export default {
     return {
       groups: ['ADES', 'CNLT', 'ELET', 'ELTD', 'FECH', 'FERR', 'GERL', 'HIDR', 'ILUM', 'IMPE', 'REVE', 'SANT'],
       valid: true,
-      required: (value) => !!value || 'Preenchimento obrigatório!'
+      required: (value) => {
+        return (value != null && value !== '') || 'Preenchimento obrigatório!'
+      }
     }
   },
   computed: {
@@ -126,7 +136,6 @@ export default {
   },
   methods: {
     close () {
-      this.$refs.form.reset()
       this.$emit('closing')
     },
     async save () {

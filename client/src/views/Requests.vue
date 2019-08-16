@@ -14,12 +14,12 @@
           />
           <v-spacer />
           <v-btn
+            v-if="!form"
             color="primary"
             dark
-            fab
-            @click="form = !form"
+            @click="form = true"
           >
-            <v-icon>{{ form ? 'undo' : 'add' }}</v-icon>
+            Adicionar Requisição
           </v-btn>
         </v-toolbar>
         <request-form
@@ -30,19 +30,21 @@
           @save="loadRequestsTable"
           @close="closeForm"
         />
-        <requests-filter
-          v-if="!form"
-          :applicants="applicants"
-          :authorizers="authorizers"
-          :search="searchRequests"
-        />
-        <requests-table
-          v-if="!form"
-          :requests="requests"
-          :loading="loading"
-          @edit-item="editItem"
-          @delete-item="deleteItem"
-        />
+        <v-container class="elevation-1">
+          <requests-filter
+            v-if="!form"
+            :applicants="applicants"
+            :authorizers="authorizers"
+            @search="searchRequests"
+          />
+          <requests-table
+            v-if="!form"
+            :requests="requests"
+            :loading="loading"
+            @edit-item="editItem"
+            @delete-item="deleteItem"
+          />
+        </v-container>
       </div>
     </v-flex>
   </v-layout>
@@ -60,7 +62,6 @@ export default {
     RequestsTable,
     RequestsFilter
   },
-
   data () {
     return {
       form: false,
@@ -71,44 +72,38 @@ export default {
       authorizers: []
     }
   },
-
   mounted () {
     this.loadRequestsTable()
   },
-
   methods: {
-    editItem (item) {
-      this.editingRequest = this.requests[this.requests.indexOf(item)]
-      this.form = true
-    },
-
-    deleteItem (item) {
-      const index = this.requests.indexOf(item)
-      confirm(`Tem certeza de que deseja EXCLUIR ${item.number}?`) &&
-      RequestsService.delete(item.id) &&
-      this.requests.splice(index, 1)
-    },
-
     async getRequests () {
-      this.loading = true
       this.requests = (await RequestsService.showAll()).data
-      this.loading = false
     },
-
     async searchRequests (filter) {
       this.loading = true
       this.requests = (await RequestsService.search(filter)).data
       this.loading = false
     },
-
     async getComboboxItems () {
       this.applicants = await RequestsService.getAttributeOptions('applicant')
       this.authorizers = await RequestsService.getAttributeOptions('authorizer')
     },
     loadRequestsTable () {
+      this.loading = true
       this.getRequests()
       this.getComboboxItems()
       this.closeForm()
+      this.loading = false
+    },
+    editItem (item) {
+      this.editingRequest = this.requests[this.requests.indexOf(item)]
+      this.form = true
+    },
+    deleteItem (item) {
+      const index = this.requests.indexOf(item)
+      confirm(`Tem certeza de que deseja EXCLUIR ${item.number}?`) &&
+      RequestsService.delete(item.id) &&
+      this.requests.splice(index, 1)
     },
     closeForm () {
       this.editingRequest = null

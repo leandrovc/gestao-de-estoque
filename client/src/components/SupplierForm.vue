@@ -167,7 +167,6 @@
     </v-card>
   </v-dialog>
 </template>
-
 <script>
 import SuppliersService from '@/services/SuppliersService'
 import { mask } from 'vue-the-mask'
@@ -235,7 +234,6 @@ export default {
       this.editedItem = Object.assign({}, item)
       this.dialog = true
     },
-
     close () {
       this.dialog = false
       setTimeout(() => {
@@ -244,7 +242,6 @@ export default {
         this.$refs.form.reset()
       }, 300)
     },
-
     async save () {
       if (this.$refs.form.validate()) {
         try {
@@ -259,12 +256,10 @@ export default {
         }
       }
     },
-
     appendTelephone () {
       const newTelephone = { number: '' }
       this.editedItem.Telephones.push(newTelephone)
     },
-
     deleteTelephone (telephone) {
       if (telephone.id) {
         confirm(`Tem certeza de que deseja EXCLUIR ${telephone.number}?`) &&

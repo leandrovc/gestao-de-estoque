@@ -14,12 +14,12 @@
           />
           <v-spacer />
           <v-btn
+            v-if="!form"
             color="primary"
             dark
-            fab
-            @click="form = !form"
+            @click="form = true"
           >
-            <v-icon>{{ form ? 'undo' : 'add' }}</v-icon>
+            Adicionar Nota Fiscal
           </v-btn>
         </v-toolbar>
         <invoice-form
@@ -28,17 +28,19 @@
           @save="loadInvoicesTable"
           @close="closeForm"
         />
-        <invoices-filter
-          v-if="!form"
-          @search-invoices="searchInvoices"
-        />
-        <invoices-table
-          v-if="!form"
-          :invoices="invoices"
-          :loading="loading"
-          @delete-item="deleteItem"
-          @edit-item="editItem"
-        />
+        <v-container class="elevation-1">
+          <invoices-filter
+            v-if="!form"
+            @search="searchInvoices"
+          />
+          <invoices-table
+            v-if="!form"
+            :invoices="invoices"
+            :loading="loading"
+            @edit-item="editItem"
+            @delete-item="deleteItem"
+          />
+        </v-container>
       </div>
     </v-flex>
   </v-layout>
@@ -46,15 +48,15 @@
 
 <script>
 import InvoicesService from '@/services/InvoicesService'
+import InvoiceForm from '@/components/InvoiceForm'
 import InvoicesTable from '@/components/InvoicesTable'
 import InvoicesFilter from '@/components/InvoicesFilter'
-import InvoiceForm from '@/components/InvoiceForm'
 
 export default {
   components: {
+    InvoiceForm,
     InvoicesTable,
-    InvoicesFilter,
-    InvoiceForm
+    InvoicesFilter
   },
   data () {
     return {

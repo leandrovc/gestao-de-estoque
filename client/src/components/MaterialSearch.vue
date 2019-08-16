@@ -21,72 +21,80 @@
       </v-flex>
     </v-card-title>
     <v-card-text>
-      <v-layout
-        wrap
-      >
-        <v-flex mt-4>
-          <v-data-table
-            :headers="headers"
-            :items="materials"
-            :loading="loading"
-            hide-actions
-            :pagination.sync="pagination"
-            class="elevation-1"
-          >
-            <template v-slot:items="props">
-              <td>{{ props.item.description }}</td>
-              <td class="text-xs-right">
-                {{ props.item.group }}
-              </td>
-              <td class="text-xs-right">
-                {{ props.item.code }}
-              </td>
-              <td class="text-xs-right">
-                {{ props.item.currentQuantity }}
-              </td>
-              <td class="text-xs-right">
-                {{ props.item.minimumQuantity }}
-              </td>
-              <td class="text-xs-right">
-                {{ props.item.unit }}
-              </td>
-              <td
-                v-if="editMaterials"
-                class="justify-center layout px-0"
+      <div>
+        <v-data-table
+          :headers="headers"
+          :items="materials"
+          :loading="loading"
+          hide-actions
+          :pagination.sync="pagination"
+          class="elevation-1"
+        >
+          <template v-slot:items="props">
+            <td>{{ props.item.description }}</td>
+            <td class="text-xs-right">
+              {{ props.item.group }}
+            </td>
+            <td class="text-xs-right">
+              {{ props.item.code }}
+            </td>
+            <td class="text-xs-right">
+              {{ props.item.currentQuantity | formatDecimal }}
+            </td>
+            <td class="text-xs-right">
+              {{ props.item.minimumQuantity | formatDecimal }}
+            </td>
+            <td class="text-xs-right">
+              {{ props.item.unit }}
+            </td>
+            <td
+              v-if="editMaterials"
+              class="justify-center layout px-0"
+            >
+              <v-icon
+                small
+                class="mr-2"
+                @click="editItem(props.item)"
               >
-                <v-icon
-                  small
-                  class="mr-2"
-                  @click="editItem(props.item)"
-                >
-                  edit
-                </v-icon>
-                <v-icon
-                  small
-                  @click="deleteItem(props.item)"
-                >
-                  delete
-                </v-icon>
-              </td>
-            </template>
-            <template v-slot:no-data>
-              <v-alert
-                :value="true"
-                type="error"
+                edit
+              </v-icon>
+              <v-icon
+                small
+                @click="deleteItem(props.item)"
               >
-                Sua busca não retornou resultados.
-              </v-alert>
-            </template>
-          </v-data-table>
-          <div class="text-xs-center pt-2">
-            <v-pagination
-              v-model="pagination.page"
-              :length="pages"
-              :total-visible="7"
-            />
-          </div>
-        </v-flex>
-      </v-layout>
+                delete
+              </v-icon>
+            </td>
+            <td
+              v-if="selectMaterials"
+              class="justify-center layout px-0"
+            >
+              <v-btn
+                small
+                class="mr-2"
+                @click="editItem(props.item)"
+              >
+                Escolher
+              </v-btn>
+            </td>
+          </template>
+          <template v-slot:no-data>
+            <v-alert
+              :value="hasSearched"
+              type="error"
+            >
+              Sua busca não retornou resultados.
+            </v-alert>
+          </template>
+        </v-data-table>
+        <div class="text-xs-center pt-2">
+          <v-pagination
+            v-model="pagination.page"
+            :length="pages"
+            :total-visible="7"
+          />
+        </div>
+      </div>
     </v-card-text>
   </v-card>
 </template>
@@ -95,8 +103,20 @@
 import MaterialsService from '@/services/MaterialsService'
 
 export default {
+  filters: {
+    formatDecimal: value => {
+      if (typeof value !== 'number') {
+        return value
+      }
+      return value.toString().replace('.', ',')
+    }
+  },
   props: {
     editMaterials: {
+      type: Boolean,
+      default: false
+    },
+    selectMaterials: {
       type: Boolean,
       default: false
     }
@@ -104,9 +124,11 @@ export default {
   data () {
     return {
       searchText: '',
+      hasSearched: false,
       pagination: {
         rowsPerPage: 10,
-        sortBy: 'code'
+        sortBy: 'id',
+        descending: true
       },
       loading: false,
       headers: [
@@ -122,7 +144,6 @@ export default {
         { text: 'Unidade', value: 'unit' }
       ],
       headerAction: { text: 'Ações', value: 'id', sortable: false },
-      rowsPerPageText: 'Linhas por página:',
       materials: []
     }
   },
@@ -137,7 +158,7 @@ export default {
     }
   },
   mounted () {
-    if (this.editMaterials) {
+    if (this.editMaterials || this.selectMaterials) {
       this.headers.push(this.headerAction)
     }
     this.getLatestMaterials()
@@ -162,6 +183,7 @@ export default {
       this.loading = true
       this.materials = (await MaterialsService.search(this.searchText)).data
       this.pagination.totalItems = this.materials.length
+      this.hasSearched = true
       this.loading = false
     }
   }

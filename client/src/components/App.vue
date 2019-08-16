@@ -5,13 +5,8 @@
     <the-toolbar />
 
     <v-content>
-      <v-container grid-list-md>
-        <v-layout
-          align-center
-          justify-center
-        >
-          <router-view />
-        </v-layout>
+      <v-container>
+        <router-view />
       </v-container>
     </v-content>
   </v-app>

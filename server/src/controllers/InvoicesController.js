@@ -59,12 +59,12 @@ module.exports = {
       delete filter.initialDate
       delete filter.finalDate
       // Find Invoices with queued Material
-      if (filter.MaterialId !== undefined && filter.MaterialId !== null) {
+      if (filter.materialId !== undefined && filter.materialId != null) {
         let invoices = await Invoice.findAll({
           include: [
             { model: Material,
               where: {
-                id: filter.MaterialId
+                id: filter.materialId
               }
             }
           ],
@@ -79,8 +79,8 @@ module.exports = {
           res.send(invoices)
           return
         }
-        filter.MaterialId = null
-        delete filter.MaterialId
+        filter.materialId = null
+        delete filter.materialId
       }
       let invoice = await Invoice.findAll({
         order: Db.sequelize.literal('id DESC'),

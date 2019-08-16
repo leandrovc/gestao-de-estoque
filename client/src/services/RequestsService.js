@@ -14,10 +14,14 @@ export default {
         filterString = filterString + `&${index}=${filterValue}`
       }
     }
-
     filterToString('number')
     filterToString('applicant')
     filterToString('authorizer')
+
+    const materialId = filter.material.id
+    if (materialId != null) {
+      filterString = filterString + `&materialId=${materialId}`
+    }
     return Api().get(`requests?${filterString}`)
   },
 

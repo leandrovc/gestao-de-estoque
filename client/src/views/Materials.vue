@@ -1,40 +1,42 @@
 <template>
   <v-layout column>
-    <v-flex>
-      <div>
-        <v-toolbar
-          flat
-          color="secondary"
-        >
-          <v-toolbar-title>MATERIAIS</v-toolbar-title>
-          <v-divider
-            class="mx-2"
-            inset
-            vertical
-          />
-          <v-spacer />
+    <v-toolbar
+      flat
+      color="secondary"
+    >
+      <v-toolbar-title>MATERIAIS</v-toolbar-title>
+      <v-divider
+        class="mx-2"
+        inset
+        vertical
+      />
+      <v-spacer />
+      <v-dialog
+        v-model="formDialog"
+        max-width="512px"
+      >
+        <template v-slot:activator="{ on }">
           <v-btn
-            v-if="!formOpen"
             color="primary"
             dark
             class="mb-2"
-            @click="createMaterial"
+            v-on="on"
           >
             Adicionar Material
           </v-btn>
-        </v-toolbar>
-        <material-search
-          v-if="!formOpen"
-          edit-materials
-          @material-selected="editMaterial"
-        />
+        </template>
         <material-form
-          v-if="formOpen"
+          :key="resetSearch"
           :editing-material="formMaterial"
           @closing="closeForm"
         />
-      </div>
-    </v-flex>
+      </v-dialog>
+    </v-toolbar>
+    <material-search
+      :key="resetSearch"
+      edit-materials
+      @material-selected="editMaterial"
+    />
   </v-layout>
 </template>
 
@@ -49,7 +51,8 @@ export default {
   },
   data () {
     return {
-      formOpen: false,
+      resetSearch: false,
+      formDialog: false,
       formMaterial: null,
       emptyFormMaterial: {
         id: null,
@@ -62,17 +65,25 @@ export default {
       }
     }
   },
+  watch: {
+    formDialog (value) {
+      !value && this.onFormClose()
+    }
+  },
+  created () {
+    this.formMaterial = Object.assign({}, this.emptyFormMaterial)
+  },
   methods: {
     editMaterial (material) {
       this.formMaterial = Object.assign({}, material)
-      this.formOpen = true
-    },
-    createMaterial () {
-      this.formMaterial = Object.assign({}, this.emptyFormMaterial)
-      this.formOpen = true
+      this.formDialog = true
     },
     closeForm () {
-      this.formOpen = false
+      this.formDialog = false
+    },
+    onFormClose () {
+      this.formMaterial = Object.assign({}, this.emptyFormMaterial)
+      this.resetSearch = !this.resetSearch
     }
   }
 }

@@ -1,209 +1,147 @@
 <template>
-  <v-container
-    class="elevation-1"
+  <v-layout
+    row
+    align-center
   >
-    <v-layout
-      row
-      wrap
+    <v-flex
+      xs1
+      mr-3
     >
-      <v-flex xs1>
-        <v-text-field
-          v-model="filter.number"
-          label="Número"
-          return-masked-value
-          mask="###.###"
-        />
-      </v-flex>
-      <v-flex xs2>
-        <v-dialog
-          ref="initialDateDialog"
-          v-model="initialDateDialog"
-          :return-value.sync="filter.initialDate"
-          persistent
-          lazy
-          full-width
-          width="290px"
+      <v-text-field
+        v-model="filter.number"
+        label="Número"
+        return-masked-value
+        mask="###.###"
+      />
+    </v-flex>
+    <v-flex
+      xs2
+      mr-3
+    >
+      <date-picker
+        :key="forceRerender"
+        :picked-date="filter.initialDate"
+        label="Data Inicial"
+        @date-picked="(value) => {setDate(value, 'initialDate')}"
+      />
+    </v-flex>
+    <v-flex
+      xs2
+      mr-3
+    >
+      <date-picker
+        :key="forceRerender"
+        :picked-date="filter.finalDate"
+        label="Data Final"
+        @date-picked="(value) => {setDate(value, 'finalDate')}"
+      />
+    </v-flex>
+    <v-flex
+      xs2
+      mr-3
+    >
+      <v-autocomplete
+        v-model="filter.supplier"
+        :loading="loading"
+        :items="suppliers"
+        :search-input.sync="searchSupplierInput"
+        label="Fornecedor"
+        cache-items
+        item-text="socialName"
+        item-value="id"
+        hide-no-data
+        hide-selected
+        return-object
+      />
+    </v-flex>
+    <v-flex
+      xs4
+      mr-3
+    >
+      <material-picker
+        :key="forceRerender"
+        :material="filter.material"
+        @material-selected="materialSelected"
+      />
+    </v-flex>
+    <v-layout column>
+      <v-btn
+        icon
+        @click="submit"
+      >
+        <v-icon
+          color="primary"
         >
-          <template v-slot:activator="{ on }">
-            <v-text-field
-              v-model="filter.initialDate"
-              label="Data Inicial"
-              prepend-icon="event"
-              readonly
-              v-on="on"
-            />
-          </template>
-          <v-date-picker
-            v-model="filter.initialDate"
-            scrollable
-            color="primary"
-            locale="pt-br"
-          >
-            <v-spacer />
-            <v-btn
-              flat
-              color="primary"
-              @click="initialDateDialog = false"
-            >
-              Cancelar
-            </v-btn>
-            <v-btn
-              flat
-              color="primary"
-              @click="$refs.initialDateDialog.save(filter.initialDate)"
-            >
-              OK
-            </v-btn>
-          </v-date-picker>
-        </v-dialog>
-      </v-flex>
-      <v-flex xs2>
-        <v-dialog
-          ref="finalDateDialog"
-          v-model="finalDateDialog"
-          :return-value.sync="filter.finalDate"
-          persistent
-          lazy
-          full-width
-          width="290px"
+          search
+        </v-icon>
+      </v-btn>
+      <v-btn
+        icon
+        @click="clear"
+      >
+        <v-icon
+          color="red"
         >
-          <template v-slot:activator="{ on }">
-            <v-text-field
-              v-model="filter.finalDate"
-              label="Data Final"
-              prepend-icon="event"
-              readonly
-              v-on="on"
-            />
-          </template>
-          <v-date-picker
-            v-model="filter.finalDate"
-            scrollable
-            color="primary"
-            locale="pt-br"
-          >
-            <v-spacer />
-            <v-btn
-              flat
-              color="primary"
-              @click="finalDateDialog = false"
-            >
-              Cancelar
-            </v-btn>
-            <v-btn
-              flat
-              color="primary"
-              @click="$refs.finalDateDialog.save(filter.finalDate)"
-            >
-              OK
-            </v-btn>
-          </v-date-picker>
-        </v-dialog>
-      </v-flex>
-      <v-flex xs2>
-        <v-autocomplete
-          v-model="filter.supplier"
-          :loading="loading"
-          :items="suppliers"
-          :search-input.sync="searchSupplierInput"
-          label="Fornecedor"
-          cache-items
-          item-text="socialName"
-          item-value="id"
-          hide-no-data
-          hide-selected
-          return-object
-        />
-      </v-flex>
-      <v-flex xs4>
-        <v-autocomplete
-          v-model="filter.material"
-          :loading="loading"
-          :items="materials"
-          :search-input.sync="searchMaterialInput"
-          label="Descrição do Material"
-          cache-items
-          item-text="description"
-          item-value="id"
-          hide-no-data
-          hide-selected
-          return-object
-        />
-      </v-flex>
-      <v-layout column>
-        <v-btn
-          icon
-          @click="submit"
-        >
-          <v-icon
-            color="primary"
-          >
-            search
-          </v-icon>
-        </v-btn>
-        <v-btn
-          icon
-          @click="clear"
-        >
-          <v-icon
-            color="red"
-          >
-            clear
-          </v-icon>
-        </v-btn>
-      </v-layout>
+          clear
+        </v-icon>
+      </v-btn>
     </v-layout>
-  </v-container>
+  </v-layout>
 </template>
 
 <script>
-import MaterialsService from '@/services/MaterialsService'
+import MaterialPicker from '@/components/MaterialPicker'
 import SuppliersService from '@/services/SuppliersService'
+import DatePicker from '@/components/DatePicker'
 
 export default {
+  components: {
+    MaterialPicker,
+    DatePicker
+  },
   data () {
     return {
-      initialDateDialog: false,
-      finalDateDialog: false,
+      forceRerender: false,
       filter: null,
       filterDefault: {
         number: '',
         initialDate: '2011-03-01',
         finalDate: new Date().toISOString().substr(0, 10),
         supplier: null,
-        material: null
+        material: {
+          id: null,
+          description: ''
+        }
       },
       suppliers: [],
-      materials: [],
       loading: false,
-      searchMaterialInput: null,
       searchSupplierInput: null,
       searchTimeout: null
     }
   },
   watch: {
-    searchMaterialInput (searchText) {
-      searchText && searchText !== '' && this.searchMaterials(searchText)
-    },
     searchSupplierInput (searchText) {
       searchText && searchText !== '' && this.searchSuppliers(searchText)
     }
   },
   created () {
     this.filter = Object.assign({}, this.filterDefault)
+    this.filter.material = Object.assign({}, this.filterDefault.material)
   },
   methods: {
     submit () {
       if (this.filter.supplier != null) {
         this.filter.SupplierId = this.filter.supplier.id
       }
-      if (this.filter.material != null) {
+      if (this.filter.material.id != null) {
         this.filter.MaterialId = this.filter.material.id
       }
-      this.$emit('search-invoices', this.filter)
+      this.$emit('search', this.filter)
     },
     clear () {
       this.filter = Object.assign({}, this.filterDefault)
+      this.filter.material = Object.assign({}, this.filterDefault.material)
+      this.forceRerender = !this.forceRerender
     },
     startSearchTimeout (callback) {
       if (this.searchTimeout !== null) {
@@ -212,17 +150,18 @@ export default {
       this.loading = true
       this.searchTimeout = setTimeout(callback, 500)
     },
-    searchMaterials (searchText) {
-      this.startSearchTimeout(async () => {
-        this.materials = (await MaterialsService.searchDescription(searchText)).data
-        this.loading = false
-      })
+    materialSelected (selectedMaterial) {
+      this.filter.material.id = selectedMaterial.id
+      this.filter.material.description = selectedMaterial.description
     },
     searchSuppliers (searchText) {
       this.startSearchTimeout(async () => {
         this.suppliers = (await SuppliersService.searchSocialName(searchText)).data
         this.loading = false
       })
+    },
+    setDate (value, index) {
+      this.filter[index] = value
     }
   }
 }

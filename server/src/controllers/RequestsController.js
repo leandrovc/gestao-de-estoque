@@ -69,6 +69,7 @@ module.exports = {
   async search (req, res) {
     try {
       let filter = req.query
+      // Set issueDate clause
       filter.issueDate = {
         [Op.gte]: filter.initialDate,
         [Op.lte]: filter.finalDate
@@ -77,15 +78,36 @@ module.exports = {
       filter.finalDate = null
       delete filter.initialDate
       delete filter.finalDate
-
+      // Find Requests with queued Material
+      if (filter.materialId !== undefined && filter.materialId != null) {
+        let requests = await Request.findAll({
+          include: [
+            { model: Material,
+              where: {
+                id: filter.materialId
+              }
+            }
+          ],
+          through: { attributes: ['id'] }
+        })
+        if (requests.length > 0) {
+          filter.id = []
+          requests.forEach(i => {
+            filter.id.push(i.dataValues.id)
+          })
+        } else {
+          res.send(requests)
+          return
+        }
+        filter.materialId = null
+        delete filter.materialId
+      }
       let request = await Request.findAll({
         order: Db.sequelize.literal('id DESC'),
         where: {
           [Op.and]: filter
         },
-        include: [{
-          model: Material
-        }]
+        include: [ Material ]
       })
       res.send(request)
     } catch (err) {

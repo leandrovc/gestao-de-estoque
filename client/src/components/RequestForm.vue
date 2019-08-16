@@ -34,49 +34,11 @@
                 />
               </v-flex>
               <v-flex xs3>
-                <v-dialog
-                  ref="dateDialog"
-                  v-model="dateDialog"
-                  :return-value.sync="editedRequest.issueDate"
-                  persistent
-                  lazy
-                  full-width
-                  width="290px"
-                >
-                  <template v-slot:activator="{ on }">
-                    <v-text-field
-                      v-model="editedRequest.issueDate"
-                      label="Data de Emissão"
-                      prepend-icon="event"
-                      readonly
-                      :rules="[required]"
-                      required
-                      v-on="on"
-                    />
-                  </template>
-                  <v-date-picker
-                    v-model="editedRequest.issueDate"
-                    scrollable
-                    color="primary"
-                    locale="pt-br"
-                  >
-                    <v-spacer />
-                    <v-btn
-                      flat
-                      color="primary"
-                      @click="dateDialog = false"
-                    >
-                      Cancelar
-                    </v-btn>
-                    <v-btn
-                      flat
-                      color="primary"
-                      @click="$refs.dateDialog.save(editedRequest.issueDate)"
-                    >
-                      OK
-                    </v-btn>
-                  </v-date-picker>
-                </v-dialog>
+                <date-picker
+                  :picked-date="editedRequest.issueDate"
+                  label="Data de Emissão"
+                  @date-picked="setDate"
+                />
               </v-flex>
               <v-flex xs3>
                 <v-combobox
@@ -172,10 +134,12 @@
 <script>
 import RequestsService from '@/services/RequestsService'
 import SelectMaterial from '@/components/SelectMaterial'
+import DatePicker from '@/components/DatePicker'
 
 export default {
   components: {
-    SelectMaterial
+    SelectMaterial,
+    DatePicker
   },
   props: {
     request: {
@@ -193,7 +157,6 @@ export default {
   },
   data () {
     return {
-      dateDialog: false,
       emptyMaterialSlot: true,
       editedIndex: -1,
       editedRequest: {
@@ -266,6 +229,9 @@ export default {
       this.editedMaterials.splice(index, 1, material)
       // TODO: update quantity
       this.editedMaterials[index].quantity = null
+    },
+    setDate (value) {
+      this.editedRequest.issueDate = value
     }
   }
 }

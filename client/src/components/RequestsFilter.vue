@@ -1,147 +1,105 @@
 <template>
-  <v-container
-    class="elevation-1"
+  <v-layout
+    row
+    align-center
   >
-    <v-layout
-      row
-      wrap
+    <v-flex
+      xs1
+      mr-3
     >
-      <v-flex xs1>
-        <v-text-field
-          v-model="filter.number"
-          label="Número"
-          return-masked-value
-          mask="###.###"
-        />
-      </v-flex>
-      <v-flex xs2>
-        <v-dialog
-          ref="initialDateDialog"
-          v-model="initialDateDialog"
-          :return-value.sync="filter.initialDate"
-          persistent
-          lazy
-          full-width
-          width="290px"
+      <v-text-field
+        v-model="filter.number"
+        label="Número"
+        return-masked-value
+        mask="###.###"
+      />
+    </v-flex>
+    <v-flex
+      xs2
+      mr-3
+    >
+      <date-picker
+        :key="forceRerender"
+        :picked-date="filter.initialDate"
+        label="Data Inicial"
+        @date-picked="(value) => {setDate(value, 'initialDate')}"
+      />
+    </v-flex>
+    <v-flex
+      xs2
+      mr-3
+    >
+      <date-picker
+        :key="forceRerender"
+        :picked-date="filter.finalDate"
+        label="Data Final"
+        @date-picked="(value) => {setDate(value, 'finalDate')}"
+      />
+    </v-flex>
+    <v-flex
+      xs2
+      mr-3
+    >
+      <v-combobox
+        v-model="filter.applicant"
+        :items="applicants"
+        label="Requerente"
+      />
+    </v-flex>
+    <v-flex
+      xs2
+      mr-3
+    >
+      <v-combobox
+        v-model="filter.authorizer"
+        :items="authorizers"
+        label="Autorizador"
+      />
+    </v-flex>
+    <v-flex
+      xs2
+      mr-3
+    >
+      <material-picker
+        :key="forceRerender"
+        :material="filter.material"
+        @material-selected="materialSelected"
+      />
+    </v-flex>
+    <v-layout column>
+      <v-btn
+        icon
+        @click="submit"
+      >
+        <v-icon
+          color="primary"
         >
-          <template v-slot:activator="{ on }">
-            <v-text-field
-              v-model="filter.initialDate"
-              label="Data Inicial"
-              prepend-icon="event"
-              readonly
-              v-on="on"
-            />
-          </template>
-          <v-date-picker
-            v-model="filter.initialDate"
-            scrollable
-            color="primary"
-            locale="pt-br"
-          >
-            <v-spacer />
-            <v-btn
-              flat
-              color="primary"
-              @click="initialDateDialog = false"
-            >
-              Cancelar
-            </v-btn>
-            <v-btn
-              flat
-              color="primary"
-              @click="$refs.initialDateDialog.save(filter.initialDate)"
-            >
-              OK
-            </v-btn>
-          </v-date-picker>
-        </v-dialog>
-      </v-flex>
-      <v-flex xs2>
-        <v-dialog
-          ref="finalDateDialog"
-          v-model="finalDateDialog"
-          :return-value.sync="filter.finalDate"
-          persistent
-          lazy
-          full-width
-          width="290px"
+          search
+        </v-icon>
+      </v-btn>
+      <v-btn
+        icon
+        @click="clear"
+      >
+        <v-icon
+          color="red"
         >
-          <template v-slot:activator="{ on }">
-            <v-text-field
-              v-model="filter.finalDate"
-              label="Data Final"
-              prepend-icon="event"
-              readonly
-              v-on="on"
-            />
-          </template>
-          <v-date-picker
-            v-model="filter.finalDate"
-            scrollable
-            color="primary"
-            locale="pt-br"
-          >
-            <v-spacer />
-            <v-btn
-              flat
-              color="primary"
-              @click="finalDateDialog = false"
-            >
-              Cancelar
-            </v-btn>
-            <v-btn
-              flat
-              color="primary"
-              @click="$refs.finalDateDialog.save(filter.finalDate)"
-            >
-              OK
-            </v-btn>
-          </v-date-picker>
-        </v-dialog>
-      </v-flex>
-      <v-flex xs3>
-        <v-combobox
-          v-model="filter.applicant"
-          :items="applicants"
-          label="Requerente"
-        />
-      </v-flex>
-      <v-flex xs3>
-        <v-combobox
-          v-model="filter.authorizer"
-          :items="authorizers"
-          label="Autorizador"
-        />
-      </v-flex>
-      <v-layout column>
-        <v-btn
-          icon
-          @click="submit"
-        >
-          <v-icon
-            color="primary"
-          >
-            search
-          </v-icon>
-        </v-btn>
-        <v-btn
-          icon
-          @click="clear"
-        >
-          <v-icon
-            color="red"
-          >
-            clear
-          </v-icon>
-        </v-btn>
-      </v-layout>
+          clear
+        </v-icon>
+      </v-btn>
     </v-layout>
-  </v-container>
+  </v-layout>
 </template>
 
 <script>
+import MaterialPicker from '@/components/MaterialPicker'
+import DatePicker from '@/components/DatePicker'
+
 export default {
+  components: {
+    MaterialPicker,
+    DatePicker
+  },
   props: {
     applicants: {
       type: Array,
@@ -150,37 +108,44 @@ export default {
     authorizers: {
       type: Array,
       required: true
-    },
-    search: {
-      type: Function,
-      required: true
     }
   },
-
   data () {
     return {
-      initialDateDialog: false,
-      finalDateDialog: false,
-      filter: {
+      forceRerender: false,
+      filter: null,
+      filterDefault: {
         number: '',
         initialDate: new Date().toISOString().substr(0, 4) + '-01-01',
         finalDate: new Date().toISOString().substr(0, 10),
         applicant: '',
-        authorizer: ''
+        authorizer: '',
+        material: {
+          id: null,
+          description: ''
+        }
       }
     }
   },
-
+  created () {
+    this.filter = Object.assign({}, this.filterDefault)
+    this.filter.material = Object.assign({}, this.filterDefault.material)
+  },
   methods: {
     submit () {
-      this.search(this.filter)
+      this.$emit('search', this.filter)
     },
     clear () {
-      this.filter.number = ''
-      this.filter.initialDate = new Date().toISOString().substr(0, 4) + '-01-01'
-      this.filter.finalDate = new Date().toISOString().substr(0, 10)
-      this.filter.applicant = ''
-      this.filter.authorizer = ''
+      this.filter = Object.assign({}, this.filterDefault)
+      this.filter.material = Object.assign({}, this.filterDefault.material)
+      this.forceRerender = !this.forceRerender
+    },
+    materialSelected (selectedMaterial) {
+      this.filter.material.id = selectedMaterial.id
+      this.filter.material.description = selectedMaterial.description
+    },
+    setDate (value, index) {
+      this.filter[index] = value
     }
   }
 }

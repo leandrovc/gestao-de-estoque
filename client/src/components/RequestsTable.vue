@@ -1,62 +1,71 @@
 <template>
-  <v-data-table
-    :headers="headers"
-    :items="requests"
-    :expand="expand"
-    :loading="loading"
-    :rows-per-page-text="rowsPerPageText"
-    class="elevation-1"
-  >
-    <template v-slot:items="props">
-      <tr @click="props.expanded = !props.expanded">
-        <td>{{ props.item.number }}</td>
-        <td>{{ props.item.issueDate | formatDate }}</td>
-        <td>{{ props.item.applicant }}</td>
-        <td>{{ props.item.authorizer }}</td>
-        <td>{{ props.item.comments }}</td>
-        <td class="justify-center layout px-0">
-          <v-icon
-            small
-            class="mr-2"
-            @click="editItem(props.item)"
-          >
-            edit
-          </v-icon>
-          <v-icon
-            small
-            @click="deleteItem(props.item)"
-          >
-            delete
-          </v-icon>
-        </td>
-      </tr>
-    </template>
-    <template v-slot:no-data>
-      <v-alert
-        :value="true"
-        color="error"
-        icon="warning"
+  <v-layout wrap>
+    <v-flex mt-4>
+      <v-data-table
+        :headers="headers"
+        :items="requests"
+        :expand="expand"
+        :loading="loading"
+        hide-actions
+        :pagination.sync="pagination"
+        class="elevation-1"
       >
-        Sua busca não retornou resultados.
-      </v-alert>
-    </template>
-    <template v-slot:pageText="props">
-      {{ props.pageStart }} - {{ props.pageStop }} de {{ props.itemsLength }}
-    </template>
-    <template v-slot:expand="props">
-      <v-card flat>
-        <v-card-text>
-          <li
-            v-for="mat in props.item.Materials"
-            :key="mat.id"
+        <template v-slot:items="props">
+          <tr @click="props.expanded = !props.expanded">
+            <td>{{ props.item.number }}</td>
+            <td>{{ props.item.issueDate | formatDate }}</td>
+            <td>{{ props.item.applicant }}</td>
+            <td>{{ props.item.authorizer }}</td>
+            <td>{{ props.item.comments }}</td>
+            <td class="justify-center layout px-0">
+              <v-icon
+                small
+                class="mr-2"
+                @click="editItem(props.item)"
+              >
+                edit
+              </v-icon>
+              <v-icon
+                small
+                @click="deleteItem(props.item)"
+              >
+                delete
+              </v-icon>
+            </td>
+          </tr>
+        </template>
+        <template v-slot:no-data>
+          <v-alert
+            :value="true"
+            color="error"
+            icon="warning"
           >
-            {{ mat.description }}
-            | <span class="quantity"> quantidade: {{ mat.MaterialRequests.quantity }} </span>
-          </li>
-        </v-card-text>
-      </v-card>
-    </template>
-  </v-data-table>
+            Sua busca não retornou resultados.
+          </v-alert>
+        </template>
+        <template v-slot:expand="props">
+          <v-card flat>
+            <v-card-text>
+              <li
+                v-for="mat in props.item.Materials"
+                :key="mat.id"
+              >
+                {{ mat.description }}
+                | <span class="quantity"> quantidade: {{ mat.MaterialRequests.quantity }} </span>
+              </li>
+            </v-card-text>
+          </v-card>
+        </template>
+      </v-data-table>
+      <div class="text-xs-center pt-2">
+        <v-pagination
+          v-model="pagination.page"
+          :length="pages"
+          :total-visible="7"
+        />
+      </div>
+    </v-flex>
+  </v-layout>
 </template>
 
 <script>
@@ -82,7 +91,10 @@ export default {
   data () {
     return {
       expand: true,
-      rowsPerPageText: 'Linhas por página:',
+      pagination: {
+        rowsPerPage: 10,
+        sortBy: 'issueDate'
+      },
       headers: [
         { text: 'Nº', value: 'number' },
         { text: 'Data de Emissão', value: 'issueDate' },
@@ -91,6 +103,16 @@ export default {
         { text: 'Comentários', value: 'comments' },
         { text: 'Ações', value: 'id', sortable: false }
       ]
+    }
+  },
+  computed: {
+    pages () {
+      if (this.pagination.rowsPerPage == null ||
+        this.pagination.totalItems == null
+      ) return 0
+
+      return Math.ceil(this.pagination.totalItems /
+        this.pagination.rowsPerPage)
     }
   },
   methods: {

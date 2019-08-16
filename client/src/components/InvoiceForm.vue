@@ -34,49 +34,11 @@
                 />
               </v-flex>
               <v-flex xs3>
-                <v-dialog
-                  ref="dateDialog"
-                  v-model="dateDialog"
-                  :return-value.sync="editedInvoice.issueDate"
-                  persistent
-                  lazy
-                  full-width
-                  width="290px"
-                >
-                  <template v-slot:activator="{ on }">
-                    <v-text-field
-                      v-model="editedInvoice.issueDate"
-                      label="Data de Emissão"
-                      prepend-icon="event"
-                      readonly
-                      :rules="[required]"
-                      required
-                      v-on="on"
-                    />
-                  </template>
-                  <v-date-picker
-                    v-model="editedInvoice.issueDate"
-                    scrollable
-                    color="primary"
-                    locale="pt-br"
-                  >
-                    <v-spacer />
-                    <v-btn
-                      flat
-                      color="primary"
-                      @click="dateDialog = false"
-                    >
-                      Cancelar
-                    </v-btn>
-                    <v-btn
-                      flat
-                      color="primary"
-                      @click="$refs.dateDialog.save(editedInvoice.issueDate)"
-                    >
-                      OK
-                    </v-btn>
-                  </v-date-picker>
-                </v-dialog>
+                <date-picker
+                  :picked-date="editedInvoice.issueDate"
+                  label="Data de Emissão"
+                  @date-picked="setDate"
+                />
               </v-flex>
               <v-flex xs4>
                 <v-autocomplete
@@ -191,10 +153,12 @@
 import InvoicesService from '@/services/InvoicesService'
 import SelectMaterial from '@/components/SelectMaterial'
 import SuppliersService from '@/services/SuppliersService'
+import DatePicker from '@/components/DatePicker'
 
 export default {
   components: {
-    SelectMaterial
+    SelectMaterial,
+    DatePicker
   },
   props: {
     invoice: {
@@ -204,7 +168,6 @@ export default {
   },
   data () {
     return {
-      dateDialog: false,
       emptyMaterialSlot: true,
       editedIndex: -1,
       editedInvoice: {
@@ -314,6 +277,9 @@ export default {
     },
     async getSupplierSocialName (id) {
       return (await SuppliersService.show(id)).data.socialName
+    },
+    setDate (value) {
+      this.editedInvoice.issueDate = value
     }
   }
 }
