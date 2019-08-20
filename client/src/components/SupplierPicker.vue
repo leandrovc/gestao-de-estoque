@@ -1,42 +1,35 @@
 <template>
   <v-layout>
     <v-text-field
-      v-model="material.description"
-      label="Material"
+      v-model="supplier.socialName"
+      label="Fornecedor"
       readonly
       append-icon="edit"
-      required
-      :rules="rules"
-      @click="openDialog"
       @click:append="openDialog"
     />
     <v-dialog
       v-model="dialog"
       max-width="1024px"
     >
-      <material-search
-        select-materials
-        @material-selected="materialSelected"
+      <supplier-search
+        select-suppliers
+        @supplier-selected="supplierSelected"
       />
     </v-dialog>
   </v-layout>
 </template>
 
 <script>
-import MaterialSearch from '@/components/MaterialSearch'
+import SupplierSearch from '@/components/SupplierSearch'
 
 export default {
   components: {
-    MaterialSearch
+    SupplierSearch
   },
   props: {
-    material: {
+    supplier: {
       type: Object,
       required: true
-    },
-    rules: {
-      type: Array,
-      default: () => {}
     }
   },
   data () {
@@ -45,8 +38,8 @@ export default {
     }
   },
   methods: {
-    materialSelected (selectedMaterial) {
-      this.$emit('material-selected', selectedMaterial)
+    supplierSelected (selectedSupplier) {
+      this.$emit('supplier-selected', selectedSupplier)
       this.dialog = false
     },
     openDialog () {

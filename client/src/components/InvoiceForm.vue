@@ -210,9 +210,7 @@ export default {
       this.editedInvoice.supplier = {
         id: this.invoice.SupplierId
       }
-      // TODO textfield?
       this.editedInvoice.supplier.socialName = this.getSupplierSocialName(this.invoice.SupplierId)
-      console.log(this.editedInvoice.supplier)
       if (this.editedInvoice.Materials.length > 0) {
         this.editedMaterials = this.invoice.Materials
         this.editedMaterials.forEach(m => {

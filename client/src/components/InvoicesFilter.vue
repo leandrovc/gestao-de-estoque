@@ -40,18 +40,10 @@
       xs2
       mr-3
     >
-      <v-autocomplete
-        v-model="filter.supplier"
-        :loading="loading"
-        :items="suppliers"
-        :search-input.sync="searchSupplierInput"
-        label="Fornecedor"
-        cache-items
-        item-text="socialName"
-        item-value="id"
-        hide-no-data
-        hide-selected
-        return-object
+      <supplier-picker
+        :key="forceRerender"
+        :supplier="filter.supplier"
+        @supplier-selected="supplierSelected"
       />
     </v-flex>
     <v-flex
@@ -91,12 +83,13 @@
 
 <script>
 import MaterialPicker from '@/components/MaterialPicker'
-import SuppliersService from '@/services/SuppliersService'
+import SupplierPicker from '@/components/SupplierPicker'
 import DatePicker from '@/components/DatePicker'
 
 export default {
   components: {
     MaterialPicker,
+    SupplierPicker,
     DatePicker
   },
   data () {
@@ -107,58 +100,42 @@ export default {
         number: '',
         initialDate: '2011-03-01',
         finalDate: new Date().toISOString().substr(0, 10),
-        supplier: null,
+        supplier: {
+          id: null,
+          socialName: ''
+        },
         material: {
           id: null,
           description: ''
         }
-      },
-      suppliers: [],
-      loading: false,
-      searchSupplierInput: null,
-      searchTimeout: null
-    }
-  },
-  watch: {
-    searchSupplierInput (searchText) {
-      searchText && searchText !== '' && this.searchSuppliers(searchText)
+      }
     }
   },
   created () {
     this.filter = Object.assign({}, this.filterDefault)
     this.filter.material = Object.assign({}, this.filterDefault.material)
+    this.filter.supplier = Object.assign({}, this.filterDefault.supplier)
   },
   methods: {
     submit () {
-      if (this.filter.supplier != null) {
+      if (this.filter.supplier.id != null) {
         this.filter.SupplierId = this.filter.supplier.id
-      }
-      if (this.filter.material.id != null) {
-        this.filter.MaterialId = this.filter.material.id
       }
       this.$emit('search', this.filter)
     },
     clear () {
       this.filter = Object.assign({}, this.filterDefault)
       this.filter.material = Object.assign({}, this.filterDefault.material)
+      this.filter.supplier = Object.assign({}, this.filterDefault.supplier)
       this.forceRerender = !this.forceRerender
-    },
-    startSearchTimeout (callback) {
-      if (this.searchTimeout !== null) {
-        clearTimeout(this.searchTimeout)
-      }
-      this.loading = true
-      this.searchTimeout = setTimeout(callback, 500)
     },
     materialSelected (selectedMaterial) {
       this.filter.material.id = selectedMaterial.id
       this.filter.material.description = selectedMaterial.description
     },
-    searchSuppliers (searchText) {
-      this.startSearchTimeout(async () => {
-        this.suppliers = (await SuppliersService.searchSocialName(searchText)).data
-        this.loading = false
-      })
+    supplierSelected (selectedSupplier) {
+      this.filter.supplier.id = selectedSupplier.id
+      this.filter.supplier.socialName = selectedSupplier.socialName
     },
     setDate (value, index) {
       this.filter[index] = value

@@ -66,7 +66,7 @@
               </v-flex>
             </v-layout>
             <br>
-            <p>Material(is)</p>
+            <p>{{ editedMaterials.length > 1 ? 'Materiais' : 'Material' }}</p>
             <v-layout
               v-for="(material, index) in editedMaterials"
               :key="material.id"
