@@ -2,6 +2,7 @@
   <v-layout
     row
     align-center
+    my-2
   >
     <v-flex
       xs1
@@ -9,9 +10,9 @@
     >
       <v-text-field
         v-model="filter.number"
+        v-mask="numberMask"
         label="Número"
         return-masked-value
-        mask="###.###"
       />
     </v-flex>
     <v-flex
@@ -92,10 +93,14 @@
 </template>
 
 <script>
-import MaterialPicker from '@/components/MaterialPicker'
+import MaterialPicker from '@/components/material/MaterialPicker'
 import DatePicker from '@/components/DatePicker'
+import { mask } from 'vue-the-mask'
 
 export default {
+  directives: {
+    mask
+  },
   components: {
     MaterialPicker,
     DatePicker
@@ -114,6 +119,7 @@ export default {
     return {
       forceRerender: false,
       filter: null,
+      numberMask: '###.###',
       filterDefault: {
         number: '',
         initialDate: new Date().toISOString().substr(0, 4) + '-01-01',

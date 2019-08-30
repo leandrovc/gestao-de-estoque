@@ -8,6 +8,7 @@
         <material-picker
           :material="selectedItem"
           :rules="rules"
+          filled
           @material-selected="itemSelected"
         />
       </v-flex>
@@ -56,7 +57,7 @@
 </template>
 
 <script>
-import MaterialPicker from '@/components/MaterialPicker'
+import MaterialPicker from '@/components/material/MaterialPicker'
 
 export default {
   components: {
@@ -78,17 +79,10 @@ export default {
   },
   data () {
     return {
-      selectedItem: {
-        description: '',
-        group: '',
-        code: '',
-        currentQuantity: null,
-        minimumQuantity: null,
-        unit: 'pc'
-      }
+      selectedItem: null
     }
   },
-  mounted () {
+  created () {
     this.selectedItem = Object.assign({}, this.materialSelected)
   },
   methods: {

@@ -23,9 +23,9 @@
             <v-flex xs4>
               <v-text-field
                 v-model="editingSupplier.cnpj"
+                v-mask="cnpjMask"
                 label="CNPJ"
                 return-masked-value
-                mask="##.###.###/####-##"
                 :rules="[required]"
                 required
               />
@@ -48,8 +48,8 @@
             <v-flex xs2>
               <v-text-field
                 v-model="editingSupplier.Address.number"
+                v-mask="numberMask"
                 label="Número"
-                mask="#####"
                 :rules="[required]"
                 required
               />
@@ -73,9 +73,9 @@
             <v-flex xs2>
               <v-combobox
                 v-model="editingSupplier.Address.state"
+                v-mask="stateMask"
                 :items="states"
                 label="UF"
-                mask="AA"
                 return-masked-value
                 :rules="[required]"
                 required
@@ -84,8 +84,8 @@
             <v-flex xs5>
               <v-text-field
                 v-model="editingSupplier.Address.cep"
+                v-mask="cepMask"
                 label="CEP"
-                mask="#####-###"
                 return-masked-value
                 :rules="[required]"
                 required
@@ -93,7 +93,7 @@
             </v-flex>
           </v-layout>
           <br>
-          <p>Telefone(s)</p>
+          <p>{{ editingSupplier.Telephones.length > 1 ? 'Telefones' : 'Telefone' }}</p>
           <v-layout
             row
             wrap
@@ -110,11 +110,13 @@
                 :label="'Telefone ' + ++index"
                 type="tel"
                 append-icon="delete"
+                :rules="[required]"
+                required
                 @click:append="deleteTelephone(tel)"
               />
             </v-flex>
             <v-btn
-              round
+              rounded
               @click="appendTelephone"
             >
               <v-icon>
@@ -129,7 +131,7 @@
         <v-spacer />
         <v-btn
           color="blue darken-1"
-          flat
+          text
           @click="close"
         >
           Cancelar
@@ -137,7 +139,7 @@
         <v-btn
           :disabled="!valid"
           color="blue darken-1"
-          flat
+          text
           @click="save"
         >
           Salvar
@@ -148,7 +150,7 @@
 </template>
 
 <script>
-import SuppliersService from '@/services/SuppliersService'
+import Supplier from '@/models/Supplier'
 import { mask } from 'vue-the-mask'
 
 export default {
@@ -164,6 +166,10 @@ export default {
   data () {
     return {
       states: ['AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MG', 'MS', 'MT', 'PA', 'PB', 'PE', 'PI', 'PR', 'RJ', 'RN', 'RO', 'RR', 'RS', 'SC', 'SE', 'SP', 'TO'],
+      cnpjMask: '##.###.###/####-##',
+      numberMask: '#####',
+      stateMask: 'AA',
+      cepMask: '#####-###',
       valid: true,
       required: (value) => {
         return (value != null && value !== '') || 'Preenchimento obrigatório!'
@@ -181,29 +187,14 @@ export default {
     },
     async save () {
       if (this.$refs.form.validate()) {
-        try {
-          if (this.editingSupplier.id == null) {
-            await SuppliersService.create(this.editingSupplier)
-          } else {
-            await SuppliersService.update(this.editingSupplier.id, this.editingSupplier)
-          }
-          this.close()
-        } catch (err) {
-          console.log(err)
-        }
+        Supplier.save(this.editingSupplier, this.close)
       }
     },
     appendTelephone () {
-      const newTelephone = { number: '' }
-      this.editingSupplier.Telephones.push(newTelephone)
+      Supplier.appendTelephone(this.editingSupplier)
     },
     deleteTelephone (telephone) {
-      if (telephone.id) {
-        confirm(`Tem certeza de que deseja EXCLUIR ${telephone.number}?`) &&
-        SuppliersService.deleteTelephone(telephone.id)
-      }
-      const index = this.editingSupplier.Telephones.indexOf(telephone)
-      this.editingSupplier.Telephones.splice(index, 1)
+      Supplier.deleteTelephone(this.editingSupplier, telephone)
     }
   }
 }

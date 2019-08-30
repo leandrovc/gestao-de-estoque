@@ -1,92 +1,103 @@
 <template>
-  <v-layout column>
-    <v-flex>
-      <div>
-        <v-toolbar
-          flat
-          color="secondary"
-        >
-          <v-toolbar-title>REQUISIÇÕES</v-toolbar-title>
-          <v-divider
-            class="mx-2"
-            inset
-            vertical
-          />
-          <v-spacer />
-          <v-btn
-            v-if="!form"
-            color="primary"
-            dark
-            @click="form = true"
-          >
-            Adicionar Requisição
-          </v-btn>
-        </v-toolbar>
-        <request-form
-          v-if="form"
-          :request="editingRequest"
-          :applicants="applicants"
-          :authorizers="authorizers"
-          @save="loadRequestsTable"
-          @close="closeForm"
-        />
-        <v-container class="elevation-1">
-          <requests-filter
-            v-if="!form"
-            :applicants="applicants"
-            :authorizers="authorizers"
-            @search="searchRequests"
-          />
-          <requests-table
-            v-if="!form"
-            :requests="requests"
-            :loading="loading"
-            @edit-item="editItem"
-            @delete-item="deleteItem"
-          />
-        </v-container>
-      </div>
-    </v-flex>
-  </v-layout>
+  <v-container
+    class="elevation-1"
+    grid-list-md
+  >
+    <v-toolbar
+      text
+      color="secondary"
+    >
+      <v-toolbar-title>REQUISIÇÕES</v-toolbar-title>
+      <v-divider
+        class="mx-2"
+        inset
+        vertical
+      />
+      <v-spacer />
+      <v-btn
+        v-if="!form"
+        color="primary"
+        dark
+        @click="form = true"
+      >
+        Adicionar
+      </v-btn>
+    </v-toolbar>
+    <request-form
+      v-if="form"
+      :request="editingRequest"
+      :applicants="applicants"
+      :authorizers="authorizers"
+      @save="loadRequestsTable"
+      @close="closeForm"
+    />
+    <requests-filter
+      v-if="!form"
+      :applicants="applicants"
+      :authorizers="authorizers"
+      @search="searchRequests"
+    />
+    <the-data-table
+      v-if="!form"
+      :headers="headers"
+      :items="requests.getList()"
+      :loading="loading"
+      show-edit
+      expand
+      @edit-item="editItem"
+      @delete-item="deleteItem"
+    />
+  </v-container>
 </template>
 
 <script>
-import RequestsService from '@/services/RequestsService'
-import RequestForm from '@/components/RequestForm'
-import RequestsTable from '@/components/RequestsTable'
-import RequestsFilter from '@/components/RequestsFilter'
+import Request from '@/models/Request'
+import RequestForm from '@/components/request/RequestForm'
+import RequestsFilter from '@/components/request/RequestsFilter'
+import TheDataTable from '@/components/TheDataTable'
 
 export default {
   components: {
     RequestForm,
-    RequestsTable,
-    RequestsFilter
+    RequestsFilter,
+    TheDataTable
   },
   data () {
     return {
       form: false,
       loading: true,
       editingRequest: null,
-      requests: [],
+      requests: null,
       applicants: [],
-      authorizers: []
+      authorizers: [],
+      headers: [
+        { text: 'Nº', value: 'number' },
+        { text: 'Data de Emissão', value: 'issueDate' },
+        { text: 'Requerente', value: 'applicant' },
+        { text: 'Autorizador', value: 'authorizer' },
+        { text: 'Comentários', value: 'comments' },
+        { text: 'Ações', value: 'action', sortable: false }
+      ]
     }
+  },
+  created () {
+    this.requests = Request.newList()
   },
   mounted () {
     this.loadRequestsTable()
   },
   methods: {
     async getRequests () {
-      this.requests = (await RequestsService.showAll()).data
+      await this.requests.showAll()
     },
     async searchRequests (filter) {
       this.loading = true
-      this.requests = (await RequestsService.search(filter)).data
+      await this.requests.showSearchResult(filter)
       this.loading = false
     },
     async getComboboxItems () {
-      this.applicants = await RequestsService.getAttributeOptions('applicant')
-      this.authorizers = await RequestsService.getAttributeOptions('authorizer')
+      this.applicants = await Request.getApplicantOptions()
+      this.authorizers = await Request.getAuthorizerOptions()
     },
     loadRequestsTable () {
       this.loading = true
@@ -95,15 +106,13 @@ export default {
       this.closeForm()
       this.loading = false
     },
-    editItem (item) {
-      this.editingRequest = this.requests[this.requests.indexOf(item)]
+    editItem (request) {
+      this.editingRequest = Request.assign(request)
       this.form = true
     },
-    deleteItem (item) {
-      const index = this.requests.indexOf(item)
-      confirm(`Tem certeza de que deseja EXCLUIR ${item.number}?`) &&
-      RequestsService.delete(item.id) &&
-      this.requests.splice(index, 1)
+    deleteItem (request) {
+      confirm(`Tem certeza de que deseja EXCLUIR ${request.number}?`) &&
+      this.requests.delete(request)
     },
     closeForm () {
       this.editingRequest = null

@@ -5,6 +5,9 @@
       label="Fornecedor"
       readonly
       append-icon="edit"
+      required
+      :rules="rules"
+      @click="openDialog"
       @click:append="openDialog"
     />
     <v-dialog
@@ -20,7 +23,7 @@
 </template>
 
 <script>
-import SupplierSearch from '@/components/SupplierSearch'
+import SupplierSearch from '@/components/supplier/SupplierSearch'
 
 export default {
   components: {
@@ -30,6 +33,10 @@ export default {
     supplier: {
       type: Object,
       required: true
+    },
+    rules: {
+      type: Array,
+      default: () => {}
     }
   },
   data () {

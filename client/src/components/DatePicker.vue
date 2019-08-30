@@ -3,7 +3,6 @@
     ref="dateDialog"
     v-model="dialog"
     persistent
-    lazy
     full-width
     width="290px"
   >
@@ -13,6 +12,8 @@
         :label="label"
         prepend-icon="event"
         readonly
+        :rules="rules"
+        required
         v-on="on"
       />
     </template>
@@ -24,14 +25,14 @@
     >
       <v-spacer />
       <v-btn
-        flat
+        text
         color="primary"
         @click="cancel"
       >
         Cancelar
       </v-btn>
       <v-btn
-        flat
+        text
         color="primary"
         @click="save"
       >
@@ -51,6 +52,10 @@ export default {
     label: {
       type: String,
       default: 'Data'
+    },
+    rules: {
+      type: Array,
+      default: () => {}
     }
   },
   data () {

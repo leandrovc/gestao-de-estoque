@@ -15,11 +15,7 @@ module.exports = {
   },
   async create (req, res) {
     try {
-      let material = req.body
-      material.currentQuantity = material.currentQuantity.toString().replace(',', '.')
-      material.minimumQuantity = material.minimumQuantity.toString().replace(',', '.')
-
-      material = await Material.create(material)
+      let material = await Material.create(req.body)
       res.send(material)
     } catch (err) {
       res.status(500).send({
@@ -91,11 +87,7 @@ module.exports = {
   },
   async update (req, res) {
     try {
-      let material = req.body
-      material.currentQuantity = material.currentQuantity.toString().replace(',', '.')
-      material.minimumQuantity = material.minimumQuantity.toString().replace(',', '.')
-
-      material = await Material.update(material, {
+      let material = await Material.update(req.body, {
         where: {
           id: req.params.materialId
         }

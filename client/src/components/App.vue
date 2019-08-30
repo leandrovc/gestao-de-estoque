@@ -5,9 +5,11 @@
     <the-toolbar />
 
     <v-content>
-      <v-container>
-        <router-view />
-      </v-container>
+      <v-layout>
+        <v-container>
+          <router-view />
+        </v-container>
+      </v-layout>
     </v-content>
   </v-app>
 </template>

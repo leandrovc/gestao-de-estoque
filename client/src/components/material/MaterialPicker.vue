@@ -2,7 +2,8 @@
   <v-layout>
     <v-text-field
       v-model="material.description"
-      label="Material"
+      label="Descrição"
+      :filled="filled"
       readonly
       append-icon="edit"
       required
@@ -23,7 +24,7 @@
 </template>
 
 <script>
-import MaterialSearch from '@/components/MaterialSearch'
+import MaterialSearch from '@/components/material/MaterialSearch'
 
 export default {
   components: {
@@ -37,6 +38,10 @@ export default {
     rules: {
       type: Array,
       default: () => {}
+    },
+    filled: {
+      type: Boolean,
+      default: false
     }
   },
   data () {

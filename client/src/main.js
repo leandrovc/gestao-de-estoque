@@ -1,25 +1,15 @@
 import Vue from 'vue'
-import App from './components/App'
+import vuetify from '@/plugins/vuetify'
 import router from './router'
-import Vuetify from 'vuetify'
-import { sync } from 'vuex-router-sync'
-import 'vuetify/dist/vuetify.min.css'
 import store from './store'
-
-Vue.config.productionTip = false
-
-Vue.use(Vuetify, {
-  theme: {
-    primary: '#245A37',
-    secondary: '#C5E0D8',
-    accent: '#B5FFE9'
-  }
-})
+import { sync } from 'vuex-router-sync'
+import App from './components/App.vue'
 
 sync(store, router)
 
 new Vue({
   router,
   store,
+  vuetify,
   render: h => h(App)
 }).$mount('#app')

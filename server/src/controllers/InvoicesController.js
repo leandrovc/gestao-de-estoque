@@ -27,9 +27,9 @@ module.exports = {
           return promiseChain.then(() => new Promise((resolve) => {
             MaterialsController.find(materialData.id).then(material => {
               invoice.addMaterial(material, {
-                through: { brand: materialData.brand,
-                  quantity: materialData.quantity,
-                  unitaryValue: materialData.unitaryValue }
+                through: { brand: materialData.MaterialInvoices.brand,
+                  quantity: materialData.MaterialInvoices.quantity,
+                  unitaryValue: materialData.MaterialInvoices.unitaryValue }
               }).then(() => {
                 resolve()
               })
@@ -125,9 +125,9 @@ module.exports = {
             return promiseChain.then(() => new Promise((resolve) => {
               MaterialsController.find(materialData.id).then(material => {
                 invoice.addMaterial(material, {
-                  through: { brand: materialData.brand,
-                    quantity: materialData.quantity,
-                    unitaryValue: materialData.unitaryValue }
+                  through: { brand: materialData.MaterialInvoices.brand,
+                    quantity: materialData.MaterialInvoices.quantity,
+                    unitaryValue: materialData.MaterialInvoices.unitaryValue }
                 }).then(() => {
                   console.log(material)
                   resolve()

@@ -31,9 +31,9 @@
             >
               <v-combobox
                 v-model="editingMaterial.group"
+                v-mask="groupMask"
                 :items="groups"
                 label="Grupo"
-                mask="AAAA"
                 :rules="[required]"
                 required
               />
@@ -41,8 +41,8 @@
             <v-flex xs3>
               <v-text-field
                 v-model="editingMaterial.code"
+                v-mask="codeMask"
                 label="Código"
-                mask="#####"
                 :rules="[required]"
                 required
               />
@@ -73,8 +73,8 @@
             <v-flex xs2>
               <v-text-field
                 v-model="editingMaterial.unit"
+                v-mask="unitMask"
                 label="Unidade"
-                mask="aa"
                 return-masked-value
                 :rules="[required]"
                 required
@@ -88,7 +88,7 @@
         <v-spacer />
         <v-btn
           color="blue darken-1"
-          flat
+          text
           @click="close"
         >
           Cancelar
@@ -96,7 +96,7 @@
         <v-btn
           :disabled="!valid"
           color="blue darken-1"
-          flat
+          text
           @click="save"
         >
           Salvar
@@ -107,7 +107,7 @@
 </template>
 
 <script>
-import MaterialsService from '@/services/MaterialsService'
+import Material from '@/models/Material'
 import { mask } from 'vue-the-mask'
 
 export default {
@@ -123,6 +123,9 @@ export default {
   data () {
     return {
       groups: ['ADES', 'CNLT', 'ELET', 'ELTD', 'FECH', 'FERR', 'GERL', 'HIDR', 'ILUM', 'IMPE', 'REVE', 'SANT'],
+      groupMask: 'AAAA',
+      codeMask: '#####',
+      unitMask: 'aa',
       valid: true,
       required: (value) => {
         return (value != null && value !== '') || 'Preenchimento obrigatório!'
@@ -140,16 +143,7 @@ export default {
     },
     async save () {
       if (this.$refs.form.validate()) {
-        try {
-          if (this.editingMaterial.id == null) {
-            await MaterialsService.create(this.editingMaterial)
-          } else {
-            await MaterialsService.update(this.editingMaterial.id, this.editingMaterial)
-          }
-          this.close()
-        } catch (err) {
-          console.log(err)
-        }
+        Material.save(this.editingMaterial, this.close)
       }
     }
   }

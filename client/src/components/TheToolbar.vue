@@ -1,9 +1,8 @@
 <template>
-  <v-toolbar
+  <v-app-bar
+    color="primary"
     app
     dark
-    color="primary"
-    fixed
   >
     <img
       src="@/assets/unifesp-logo.png"
@@ -17,29 +16,29 @@
 
     <v-toolbar-items>
       <v-btn
-        flat
+        text
         to="/materials"
       >
         Materiais
       </v-btn>
       <v-btn
-        flat
+        text
         to="/invoices"
       >
         Notas Fiscais
       </v-btn>
       <v-btn
-        flat
+        text
         to="/suppliers"
       >
         Fornecedores
       </v-btn>
       <v-btn
-        flat
+        text
         to="/requests"
       >
         Requisições
       </v-btn>
     </v-toolbar-items>
-  </v-toolbar>
+  </v-app-bar>
 </template>

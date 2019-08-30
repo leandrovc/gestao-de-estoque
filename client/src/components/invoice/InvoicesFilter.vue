@@ -9,9 +9,9 @@
     >
       <v-text-field
         v-model="filter.number"
+        v-mask="numberMask"
         label="Número"
         return-masked-value
-        mask="###.###"
       />
     </v-flex>
     <v-flex
@@ -82,11 +82,15 @@
 </template>
 
 <script>
-import MaterialPicker from '@/components/MaterialPicker'
-import SupplierPicker from '@/components/SupplierPicker'
+import MaterialPicker from '@/components/material/MaterialPicker'
+import SupplierPicker from '@/components/supplier/SupplierPicker'
 import DatePicker from '@/components/DatePicker'
+import { mask } from 'vue-the-mask'
 
 export default {
+  directives: {
+    mask
+  },
   components: {
     MaterialPicker,
     SupplierPicker,
@@ -96,6 +100,7 @@ export default {
     return {
       forceRerender: false,
       filter: null,
+      numberMask: '###.###',
       filterDefault: {
         number: '',
         initialDate: '2011-03-01',
