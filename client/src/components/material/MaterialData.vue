@@ -9,6 +9,7 @@
           :material="selectedItem"
           :rules="rules"
           filled
+          :show-add="showAdd"
           @material-selected="itemSelected"
         />
       </v-flex>
@@ -75,6 +76,10 @@ export default {
     rules: {
       type: Array,
       required: true
+    },
+    showAdd: {
+      type: Boolean,
+      default: false
     }
   },
   data () {

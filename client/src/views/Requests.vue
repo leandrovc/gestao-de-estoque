@@ -45,7 +45,7 @@
       show-edit
       expand
       @edit-item="editItem"
-      @delete-item="deleteItem"
+      @delete-item="deleteRequest"
     />
   </v-container>
 </template>
@@ -110,9 +110,9 @@ export default {
       this.editingRequest = Request.assign(request)
       this.form = true
     },
-    deleteItem (request) {
+    deleteRequest (request) {
       confirm(`Tem certeza de que deseja EXCLUIR ${request.number}?`) &&
-      this.requests.delete(request)
+      this.requests.deleteItem(request)
     },
     closeForm () {
       this.editingRequest = null

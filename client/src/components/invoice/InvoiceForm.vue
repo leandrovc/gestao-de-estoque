@@ -42,6 +42,7 @@
         <supplier-picker
           :supplier="editedInvoice.Supplier"
           :rules="[required]"
+          show-add
           @supplier-selected="supplierSelected"
         />
       </v-flex>
@@ -58,6 +59,7 @@
             :material-selected="material"
             :material-selected-index="index"
             :rules="[required]"
+            show-add
             required
             @material-selected="replaceMaterial"
           />
@@ -91,9 +93,12 @@
             <v-flex xs2>
               <v-text-field
                 v-model="material.MaterialInvoices.unitaryValue"
+                v-mask="['#,##', '##,##', '###,##', '####,##']"
                 label="Valor Unitário"
-                hint="9999.99"
+                hint="R$9999,99"
+                return-masked-value
                 persistent-hint
+                prefix="R$"
                 :rules="[required]"
                 required
               />

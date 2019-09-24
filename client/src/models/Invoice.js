@@ -29,6 +29,7 @@ export default {
     try {
       invoice.Materials.forEach(m => {
         m.MaterialInvoices.quantity = m.MaterialInvoices.quantity.toString().replace(',', '.')
+        m.MaterialInvoices.unitaryValue = m.MaterialInvoices.unitaryValue.toString().replace(',', '.')
       })
       invoice.SupplierId = invoice.Supplier.id
       if (invoice.id == null) {
@@ -94,6 +95,7 @@ export default {
         this.list.forEach((m) => {
           if (m.MaterialInvoices != null) {
             m.MaterialInvoices.quantity = m.MaterialInvoices.quantity.toString().replace('.', ',')
+            m.MaterialInvoices.unitaryValue = m.MaterialInvoices.unitaryValue.toString().replace('.', ',')
           }
         })
       },

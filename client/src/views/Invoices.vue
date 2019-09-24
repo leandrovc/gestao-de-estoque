@@ -41,7 +41,7 @@
       show-edit
       expand
       @edit-item="editItem"
-      @delete-item="deleteItem"
+      @delete-item="deleteInvoice"
     />
   </v-container>
 </template>
@@ -97,9 +97,9 @@ export default {
       this.editingInvoice = Invoice.assign(invoice)
       this.form = true
     },
-    deleteItem (invoice) {
+    deleteInvoice (invoice) {
       confirm(`Tem certeza de que deseja EXCLUIR ${invoice.number}?`) &&
-      this.invoices.delete(invoice)
+      this.invoices.deleteItem(invoice)
     },
     closeForm () {
       this.editingInvoice = null
