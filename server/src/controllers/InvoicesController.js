@@ -1,7 +1,7 @@
 const Db = require('../models/index')
 const { Invoice, Material, Supplier } = Db
 const Op = Db.Sequelize.Op
-const MaterialsController = require('./MaterialsController')
+const MaterialJunctionsController = require('./MaterialJunctionsController')
 
 module.exports = {
   async show (req, res) {
@@ -22,24 +22,10 @@ module.exports = {
       let invoice = await Invoice.create(
         invoiceData
       )
-      invoiceData.Materials.reduce(
-        (promiseChain, materialData) => {
-          return promiseChain.then(() => new Promise((resolve) => {
-            MaterialsController.find(materialData.id).then(material => {
-              invoice.addMaterial(material, {
-                through: { brand: materialData.MaterialInvoices.brand,
-                  quantity: materialData.MaterialInvoices.quantity,
-                  unitaryValue: materialData.MaterialInvoices.unitaryValue }
-              }).then(() => {
-                resolve()
-              })
-            })
-          }))
-        },
-        Promise.resolve()
-      ).then(
-        res.send(invoice)
-      )
+      for (const materialData of invoiceData.Materials) {
+        await MaterialJunctionsController.addMaterialToInvoice(materialData, invoice)
+      }
+      res.send(invoice)
     } catch (err) {
       res.status(500).send({
         error: 'Ocorreu um erro ao tentar criar a nota fiscal.'
@@ -119,26 +105,11 @@ module.exports = {
         }
       })
       let invoice = await Invoice.findByPk(req.params.invoiceId)
-      invoice.setMaterials([])
-        .then(invoiceData.Materials.reduce(
-          (promiseChain, materialData) => {
-            return promiseChain.then(() => new Promise((resolve) => {
-              MaterialsController.find(materialData.id).then(material => {
-                invoice.addMaterial(material, {
-                  through: { brand: materialData.MaterialInvoices.brand,
-                    quantity: materialData.MaterialInvoices.quantity,
-                    unitaryValue: materialData.MaterialInvoices.unitaryValue }
-                }).then(() => {
-                  console.log(material)
-                  resolve()
-                })
-              })
-            }))
-          },
-          Promise.resolve()
-        ).then(() => {
-          res.send('Nota Fiscal atualizada!')
-        }))
+      await invoice.setMaterials([])
+      for (const materialData of invoiceData.Materials) {
+        await MaterialJunctionsController.addMaterialToInvoice(materialData, invoice)
+      }
+      res.send('Nota Fiscal atualizada!')
     } catch (err) {
       res.status(500).send({
         error: 'Ocorreu um erro ao tentar atualizar a nota fiscal.'

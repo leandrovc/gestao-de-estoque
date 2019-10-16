@@ -2,6 +2,6 @@ import axios from 'axios'
 
 export default () => {
   return axios.create({
-    baseURL: `http://localhost:8081/` // DEPLOY: URL do backend
+    baseURL: process.env.SERVER_HOST_PORT
   })
 }

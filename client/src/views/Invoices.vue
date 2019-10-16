@@ -94,7 +94,7 @@ export default {
       this.loading = false
     },
     editItem (invoice) {
-      this.editingInvoice = Invoice.assign(invoice)
+      this.editingInvoice = Invoice.assign(invoice, this.editingInvoice)
       this.form = true
     },
     deleteInvoice (invoice) {
@@ -102,7 +102,7 @@ export default {
       this.invoices.deleteItem(invoice)
     },
     closeForm () {
-      this.editingInvoice = null
+      this.editingInvoice = Invoice.assign(null, this.editingInvoice)
       this.form = false
     }
   }

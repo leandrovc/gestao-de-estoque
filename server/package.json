@@ -14,11 +14,14 @@
   "dependencies": {
     "body-parser": "^1.18.3",
     "cors": "^2.8.5",
+    "dotenv": "^8.1.0",
+    "eslint-utils": "^1.4.2",
     "express": "^4.16.4",
     "lodash": "^4.17.14",
     "mariadb": "^2.0.3",
     "mixin-deep": "^2.0.1",
     "morgan": "^1.9.1",
+    "node": "^12.11.0",
     "sequelize": "^5.3.0",
     "sequelize-cli": "^5.5.0",
     "set-value": "^3.0.1"

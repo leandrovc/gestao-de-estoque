@@ -173,7 +173,7 @@ export default {
     }
   },
   created () {
-    this.editedRequest = Request.assign(this.request)
+    this.editedRequest = Request.assign(this.request, this.editedRequest)
     this.emptyMaterialSlot = this.request == null
   },
   methods: {

@@ -8,22 +8,17 @@ export default {
       id: null,
       socialName: ''
     },
-    Materials: [
-      {
-        description: '',
-        MaterialInvoices: {
-          brand: '',
-          quantity: null,
-          unitaryValue: null
-        }
-      }
-    ]
+    Materials: []
   },
-  assign (invoice) {
+  assign (invoice, receiver) {
     if (invoice !== undefined && invoice != null) {
       return Object.assign({}, invoice)
     }
-    return Object.assign({}, this.emptyInvoice)
+    receiver = Object.assign({}, this.emptyInvoice)
+    receiver.Supplier = Object.assign({}, this.emptyInvoice.Supplier)
+    receiver.Materials = []
+    this.appendMaterial(receiver)
+    return receiver
   },
   async save (invoice, callback) {
     try {

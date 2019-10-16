@@ -107,7 +107,7 @@ export default {
       this.loading = false
     },
     editItem (request) {
-      this.editingRequest = Request.assign(request)
+      this.editingRequest = Request.assign(request, this.editingRequest)
       this.form = true
     },
     deleteRequest (request) {
@@ -115,7 +115,7 @@ export default {
       this.requests.deleteItem(request)
     },
     closeForm () {
-      this.editingRequest = null
+      this.editingRequest = Request.assign(null, this.editingRequest)
       this.form = false
     }
   }

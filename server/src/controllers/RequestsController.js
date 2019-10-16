@@ -1,7 +1,7 @@
 const Db = require('../models/index')
-const { Request, Material, MaterialRequests } = Db
+const { Request, Material } = Db
 const Op = Db.Sequelize.Op
-const MaterialsController = require('./MaterialsController')
+const MaterialJunctionsController = require('./MaterialJunctionsController')
 
 module.exports = {
   async show (req, res) {
@@ -22,22 +22,10 @@ module.exports = {
       let request = await Request.create(
         requestData
       )
-      requestData.Materials.reduce(
-        (promiseChain, materialData) => {
-          return promiseChain.then(() => new Promise((resolve) => {
-            MaterialsController.find(materialData.id).then(material => {
-              request.addMaterial(material, {
-                through: { quantity: materialData.MaterialRequests.quantity }
-              }).then(() => {
-                resolve()
-              })
-            })
-          }))
-        },
-        Promise.resolve()
-      ).then(
-        res.send(request)
-      )
+      for (const materialData of requestData.Materials) {
+        await MaterialJunctionsController.addMaterialToRequest(materialData, request)
+      }
+      res.send(request)
     } catch (err) {
       res.status(500).send({
         error: 'Ocorreu um erro ao tentar criar a requisição.'
@@ -140,22 +128,10 @@ module.exports = {
       })
       let request = await Request.findByPk(req.params.requestId)
       request.setMaterials([])
-        .then(requestData.Materials.reduce(
-          (promiseChain, materialData) => {
-            return promiseChain.then(() => new Promise((resolve) => {
-              MaterialsController.find(materialData.id).then(material => {
-                request.addMaterial(material, {
-                  through: { quantity: materialData.MaterialRequests.quantity }
-                }).then(() => {
-                  resolve()
-                })
-              })
-            }))
-          },
-          Promise.resolve()
-        ).then(() => {
-          res.send('Requisição atualizada!')
-        }))
+      for (const materialData of requestData.Materials) {
+        await MaterialJunctionsController.addMaterialToRequest(materialData, request)
+      }
+      res.send('Requisição atualizada!')
     } catch (err) {
       res.status(500).send({
         error: 'Ocorreu um erro ao tentar atualizar a requisição.'
@@ -176,27 +152,6 @@ module.exports = {
       res.status(500).send({
         error: 'Ocorreu um erro ao tentar excluir a requisição.'
       })
-    }
-  },
-  async updateQuantity (requestId, materialId, quantity) {
-    try {
-      MaterialRequests.update({
-        quantity: quantity
-      },
-      {
-        where: {
-          [Op.and]: [
-            {
-              RequestId: requestId
-            },
-            {
-              MaterialId: materialId
-            }
-          ]
-        }
-      })
-    } catch (err) {
-      console.log(err)
     }
   }
 }

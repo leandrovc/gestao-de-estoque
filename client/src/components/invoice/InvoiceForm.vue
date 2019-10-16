@@ -176,7 +176,7 @@ export default {
     }
   },
   created () {
-    this.editedInvoice = Invoice.assign(this.invoice)
+    this.editedInvoice = Invoice.assign(this.invoice, this.editedInvoice)
     this.emptyMaterialSlot = this.invoice == null
   },
   methods: {

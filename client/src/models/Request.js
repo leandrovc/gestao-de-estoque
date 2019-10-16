@@ -7,20 +7,16 @@ export default {
     applicant: '',
     authorizer: '',
     comments: '',
-    Materials: [
-      {
-        description: '',
-        MaterialRequests: {
-          quantity: null
-        }
-      }
-    ]
+    Materials: []
   },
-  assign (request) {
+  assign (request, receiver) {
     if (request !== undefined && request != null) {
       return Object.assign({}, request)
     }
-    return Object.assign({}, this.emptyRequest)
+    receiver = Object.assign({}, this.emptyRequest)
+    receiver.Materials = []
+    this.appendMaterial(receiver)
+    return receiver
   },
   async save (request, callback) {
     try {
