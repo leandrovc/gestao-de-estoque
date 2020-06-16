@@ -1,9 +1,9 @@
 module.exports = {
-  database: process.env.DB_NAME || 'infraestrutura',
-  username: process.env.DB_USER || 'root',
-  password: process.env.DB_PASS || '1234',
-  dialect: process.env.DIALECT || 'mariadb',
-  host: process.env.HOST || 'localhost',
+  database: process.env.DB_NAME,
+  username: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  dialect: process.env.DIALECT,
+  host: process.env.HOST,
   pool: {
     max: 5,
     min: 0,
