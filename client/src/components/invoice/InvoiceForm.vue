@@ -62,6 +62,7 @@
             show-add
             required
             @material-selected="replaceMaterial"
+            @material-deleted="deleteMaterial"
           />
         </v-flex>
         <v-spacer />
@@ -196,6 +197,10 @@ export default {
     },
     replaceMaterial (material, index) {
       Invoice.replaceMaterial(this.editedInvoice.Materials, material, index)
+      this.emptyMaterialSlot = false
+    },
+    deleteMaterial (index) {
+      Invoice.deleteMaterial(this.editedInvoice.Materials, index)
       this.emptyMaterialSlot = false
     },
     supplierSelected (selectedSupplier) {

@@ -56,6 +56,9 @@ export default {
       unitaryValue: null
     }
   },
+  deleteMaterial (invoiceMaterials, index) {
+    invoiceMaterials.splice(index, 1)
+  },
   newList () {
     return {
       list: [],

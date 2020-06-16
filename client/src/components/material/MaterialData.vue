@@ -53,6 +53,16 @@
           :disabled="selectedItem.description === ''"
         />
       </v-flex>
+      <v-flex>
+        <v-btn
+          rounded
+          @click="deleteItem"
+        >
+          <v-icon>
+            delete
+          </v-icon>
+        </v-btn>
+      </v-flex>
     </v-layout>
   </v-container>
 </template>
@@ -94,6 +104,9 @@ export default {
     itemSelected (selectedMaterial) {
       this.selectedItem = Object.assign({}, selectedMaterial)
       this.$emit('material-selected', selectedMaterial, this.materialSelectedIndex)
+    },
+    deleteItem () {
+      this.$emit('material-deleted', this.materialSelectedIndex)
     }
   }
 }

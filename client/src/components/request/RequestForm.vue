@@ -81,6 +81,7 @@
             :rules="[required]"
             required
             @material-selected="replaceMaterial"
+            @material-deleted="deleteMaterial"
           />
         </v-flex>
         <v-spacer />
@@ -193,6 +194,10 @@ export default {
     },
     replaceMaterial (material, index) {
       Request.replaceMaterial(this.editedRequest.Materials, material, index)
+      this.emptyMaterialSlot = false
+    },
+    deleteMaterial (index) {
+      Request.deleteMaterial(this.editedRequest.Materials, index)
       this.emptyMaterialSlot = false
     },
     setDate (value) {

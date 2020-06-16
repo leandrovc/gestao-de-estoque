@@ -48,6 +48,9 @@ export default {
       quantity: null
     }
   },
+  deleteMaterial (requestMaterials, index) {
+    requestMaterials.splice(index, 1)
+  },
   async getApplicantOptions () {
     return RequestsService.getAttributeOptions('applicant')
   },
