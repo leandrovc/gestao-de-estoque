@@ -1,4 +1,5 @@
 import MaterialsService from '@/services/MaterialsService'
+import EventBus from '@/event-bus'
 
 export default {
   emptyMaterial: {
@@ -22,8 +23,10 @@ export default {
       material.minimumQuantity = material.minimumQuantity.toString().replace(',', '.')
       if (material.id == null) {
         await MaterialsService.create(material)
+        EventBus.$emit('show-feedback', 'Material adicionado')
       } else {
         await MaterialsService.update(material.id, material)
+        EventBus.$emit('show-feedback', 'Material editado')
       }
       callback()
     } catch (err) {
@@ -54,6 +57,7 @@ export default {
         const index = this.list.indexOf(item)
         MaterialsService.delete(item.id) &&
         this.list.splice(index, 1)
+        EventBus.$emit('show-feedback', 'Material excluído')
       }
     }
   }

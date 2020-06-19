@@ -11,16 +11,20 @@
         </v-container>
       </v-layout>
     </v-content>
+
+    <event-feedback />
   </v-app>
 </template>
 
 <script>
 import TheToolbar from '@/components/TheToolbar'
+import EventFeedback from '@/components/EventFeedback'
 
 export default {
   name: 'App',
   components: {
-    TheToolbar
+    TheToolbar,
+    EventFeedback
   }
 }
 </script>

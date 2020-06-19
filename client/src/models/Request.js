@@ -1,4 +1,5 @@
 import RequestsService from '@/services/RequestsService'
+import EventBus from '@/event-bus'
 
 export default {
   emptyRequest: {
@@ -25,8 +26,10 @@ export default {
       })
       if (request.id == null) {
         await RequestsService.create(request)
+        EventBus.$emit('show-feedback', 'Requisição adicionada')
       } else {
         await RequestsService.update(request.id, request)
+        EventBus.$emit('show-feedback', 'Requisição editada')
       }
       callback()
     } catch (err) {
@@ -95,6 +98,7 @@ export default {
         const index = this.list.indexOf(item)
         RequestsService.delete(item.id) &&
         this.list.splice(index, 1)
+        EventBus.$emit('show-feedback', 'Requisição excluída')
       }
     }
   }

@@ -1,4 +1,5 @@
 import SuppliersService from '@/services/SuppliersService'
+import EventBus from '@/event-bus'
 
 export default {
   emptySupplier: {
@@ -25,8 +26,10 @@ export default {
     try {
       if (supplier.id == null) {
         await SuppliersService.create(supplier)
+        EventBus.$emit('show-feedback', 'Fornecedor adicionado')
       } else {
         await SuppliersService.update(supplier.id, supplier)
+        EventBus.$emit('show-feedback', 'Fornecedor editado')
       }
       callback()
     } catch (err) {
@@ -76,6 +79,7 @@ export default {
         const index = this.list.indexOf(item)
         SuppliersService.delete(item.id) &&
         this.list.splice(index, 1)
+        EventBus.$emit('show-feedback', 'Fornecedor excluído')
       }
     }
   }

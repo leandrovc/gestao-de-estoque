@@ -1,4 +1,5 @@
 import InvoicesService from '@/services/InvoicesService'
+import EventBus from '@/event-bus'
 
 export default {
   emptyInvoice: {
@@ -29,8 +30,10 @@ export default {
       invoice.SupplierId = invoice.Supplier.id
       if (invoice.id == null) {
         await InvoicesService.create(invoice)
+        EventBus.$emit('show-feedback', 'Nota Fiscal adicionada')
       } else {
         await InvoicesService.update(invoice.id, invoice)
+        EventBus.$emit('show-feedback', 'Nota Fiscal editada')
       }
       callback()
     } catch (err) {
@@ -114,6 +117,7 @@ export default {
         const index = this.list.indexOf(item)
         InvoicesService.delete(item.id) &&
         this.list.splice(index, 1)
+        EventBus.$emit('show-feedback', 'Nota Fiscal excluída')
       }
     }
   }
