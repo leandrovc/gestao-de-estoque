@@ -4,3 +4,4 @@ server/db/seeders/
 server/.env
 client/.env
 client/src/.env
+.env

@@ -40,7 +40,7 @@
       </v-flex>
       <v-flex xs3>
         <supplier-picker
-          :supplier="editedInvoice.Supplier"
+          v-model="editedInvoice.Supplier"
           :rules="[required]"
           show-add
           @supplier-selected="supplierSelected"

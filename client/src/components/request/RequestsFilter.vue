@@ -63,7 +63,7 @@
     >
       <material-picker
         :key="forceRerender"
-        :material="filter.material"
+        v-model="filter.material"
         @material-selected="materialSelected"
       />
     </v-flex>

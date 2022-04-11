@@ -1,7 +1,7 @@
 <template>
   <v-layout>
     <v-text-field
-      v-model="material.description"
+      :value="value.description"
       label="Descrição"
       :filled="filled"
       readonly
@@ -10,6 +10,7 @@
       :rules="rules"
       @click="openDialog"
       @click:append="openDialog"
+      @input="valueChanged($event, 'description')"
     />
     <v-dialog
       v-model="dialog"
@@ -22,13 +23,13 @@
       >
         <template
           v-if="showAdd"
-          v-slot:add-button
+          #add-button
         >
           <v-dialog
             v-model="formDialog"
             max-width="512px"
           >
-            <template v-slot:activator="{ on }">
+            <template #activator="{ on }">
               <v-btn
                 color="accent"
                 class="mb-2 black--text"
@@ -39,7 +40,7 @@
             </template>
             <material-form
               :key="resetSearch"
-              :editing-material="formMaterial"
+              v-model="formMaterial"
               @closing="closeForm"
             />
           </v-dialog>
@@ -60,7 +61,7 @@ export default {
     MaterialSearch
   },
   props: {
-    material: {
+    value: {
       type: Object,
       required: true
     },
@@ -82,21 +83,32 @@ export default {
       dialog: false,
       formDialog: false,
       resetSearch: false,
-      formMaterial: null
+      formMaterial: null,
+      material: {},
     }
   },
   watch: {
     formDialog (value) {
       !value && this.onFormClose()
+    },
+    value (newValue) {
+      if (Object.keys(this.material).length === 0 && this.material.constructor === Object) {
+       this.material = newValue
+      }
     }
   },
   created () {
     this.formMaterial = Material.assign()
+    this.material = { ...this.value }
   },
   methods: {
     materialSelected (selectedMaterial) {
       this.$emit('material-selected', selectedMaterial)
       this.dialog = false
+    },
+    valueChanged ($event, fieldName) {
+      this.material[fieldName] = $event
+      this.$emit('input', this.material)
     },
     openDialog () {
       this.dialog = true

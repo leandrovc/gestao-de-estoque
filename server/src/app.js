@@ -1,4 +1,4 @@
-require('dotenv').config({ path: require('path').resolve('../.env') })
+const ck = require('ckey')
 const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
@@ -12,7 +12,7 @@ app.use(cors())
 
 require('./routes')(app)
 
-const PORT = process.env.PORT
+const PORT = ck.SERVER_PORT
 
 sequelize.sync()
   .then(() => {

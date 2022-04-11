@@ -3,10 +3,9 @@
     ref="dateDialog"
     v-model="dialog"
     persistent
-    full-width
     width="290px"
   >
-    <template v-slot:activator="{ on }">
+    <template #activator="{ on }">
       <v-text-field
         v-model="date"
         :label="label"

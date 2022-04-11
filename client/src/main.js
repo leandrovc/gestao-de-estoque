@@ -5,8 +5,6 @@ import store from './store'
 import { sync } from 'vuex-router-sync'
 import App from './components/App.vue'
 
-require('dotenv').config({ path: require('path').resolve('../.env') })
-
 sync(store, router)
 
 new Vue({

@@ -4,8 +4,6 @@ module.exports = {
     'es6': true
   },
   'extends': [
-    'vue',
-    'standard',
     'plugin:vue/recommended'
   ],
   'globals': {
@@ -13,8 +11,9 @@ module.exports = {
     'SharedArrayBuffer': 'readonly'
   },
   'parserOptions': {
-    'parser': 'babel-eslint',
+    'parser': '@babel/eslint-parser',
     'ecmaVersion': 2018,
+    'requireConfigFile': false,
     'sourceType': 'module'
   },
   'plugins': [

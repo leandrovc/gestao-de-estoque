@@ -17,10 +17,11 @@
               xs10
             >
               <v-text-field
-                v-model="editingMaterial.description"
+                :value="value.description"
                 label="Descrição"
                 :rules="[required]"
                 required
+                @input="valueChanged($event, 'description')"
               />
             </v-flex>
           </v-layout>
@@ -30,21 +31,23 @@
               xs3
             >
               <v-combobox
-                v-model="editingMaterial.group"
                 v-mask="groupMask"
+                :value="value.group"
                 :items="groups"
                 label="Grupo"
                 :rules="[required]"
                 required
+                @input="valueChanged($event, 'group')"
               />
             </v-flex>
             <v-flex xs3>
               <v-text-field
-                v-model="editingMaterial.code"
                 v-mask="codeMask"
+                :value="value.code"
                 label="Código"
                 :rules="[required]"
                 required
+                @input="valueChanged($event, 'code')"
               />
             </v-flex>
           </v-layout>
@@ -54,30 +57,33 @@
               xs4
             >
               <v-text-field
-                v-model="editingMaterial.currentQuantity"
                 v-mask="['#,##', '##,##', '###,##', '####,##']"
+                :value="value.currentQuantity"
                 label="Quant. atual"
                 :rules="[required]"
                 required
+                @input="valueChanged($event, 'currentQuantity')"
               />
             </v-flex>
             <v-flex xs4>
               <v-text-field
-                v-model="editingMaterial.minimumQuantity"
                 v-mask="['#,##', '##,##', '###,##', '####,##']"
+                :value="value.minimumQuantity"
                 label="Quant. mínima"
                 :rules="[required]"
                 required
+                @input="valueChanged($event, 'minimumQuantity')"
               />
             </v-flex>
             <v-flex xs2>
               <v-text-field
-                v-model="editingMaterial.unit"
                 v-mask="unitMask"
+                :value="value.unit"
                 label="Unidade"
                 return-masked-value
                 :rules="[required]"
                 required
+                @input="valueChanged($event, 'unit')"
               />
             </v-flex>
           </v-layout>
@@ -115,7 +121,7 @@ export default {
     mask
   },
   props: {
-    editingMaterial: {
+    value: {
       type: Object,
       required: true
     }
@@ -127,6 +133,7 @@ export default {
       codeMask: '#####',
       unitMask: 'aa',
       valid: true,
+      editingMaterial: {},
       required: (value) => {
         return (value != null && value !== '') || 'Preenchimento obrigatório!'
       }
@@ -137,7 +144,21 @@ export default {
       return this.editingMaterial.id == null ? 'Novo Material' : 'Editar Material'
     }
   },
+  watch: {
+    value (newValue) {
+      if (Object.keys(this.editingMaterial).length === 0 && this.editingMaterial.constructor === Object) {
+       this.editingMaterial = newValue
+      }
+    }
+  },
+  created () {
+    this.editingMaterial = { ...this.value }
+  },
   methods: {
+    valueChanged ($event, fieldName) {
+      this.editingMaterial[fieldName] = $event
+      this.$emit('input', this.editingMaterial)
+    },
     close () {
       this.$emit('closing')
     },

@@ -1,10 +1,10 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from './views/Home.vue'
-import Materials from './views/Materials.vue'
-import Suppliers from './views/Suppliers.vue'
-import Requests from './views/Requests.vue'
-import Invoices from './views/Invoices.vue'
+import Home from './views/HomeView.vue'
+import Materials from './views/MaterialsView.vue'
+import Suppliers from './views/SuppliersView.vue'
+import Requests from './views/RequestsView.vue'
+import Invoices from './views/InvoicesView.vue'
 
 Vue.use(Router)
 

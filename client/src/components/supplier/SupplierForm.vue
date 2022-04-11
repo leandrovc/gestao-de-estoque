@@ -14,20 +14,22 @@
           <v-layout>
             <v-flex xs8>
               <v-text-field
-                v-model="editingSupplier.socialName"
+                :value="value.socialName"
                 label="Razão Social"
                 :rules="[required]"
                 required
+                @input="valueChanged($event, 'socialName')"
               />
             </v-flex>
             <v-flex xs4>
               <v-text-field
-                v-model="editingSupplier.cnpj"
                 v-mask="cnpjMask"
+                :value="value.cnpj"
                 label="CNPJ"
                 return-masked-value
                 :rules="[required]"
                 required
+                @input="valueChanged($event, 'cnpj')"
               />
             </v-flex>
           </v-layout>
@@ -39,56 +41,62 @@
           >
             <v-flex xs10>
               <v-text-field
-                v-model="editingSupplier.Address.street"
+                :value="value.Address.street"
                 label="Logradouro"
                 :rules="[required]"
                 required
+                @input="valueAddressChanged($event, 'street')"
               />
             </v-flex>
             <v-flex xs2>
               <v-text-field
-                v-model="editingSupplier.Address.number"
                 v-mask="numberMask"
+                :value="value.Address.number"
                 label="Número"
                 :rules="[required]"
                 required
+                @input="valueAddressChanged($event, 'number')"
               />
             </v-flex>
             <v-flex xs5>
               <v-text-field
-                v-model="editingSupplier.Address.district"
+                :value="value.Address.district"
                 label="Bairro"
                 :rules="[required]"
                 required
+                @input="valueAddressChanged($event, 'district')"
               />
             </v-flex>
             <v-flex xs5>
               <v-text-field
-                v-model="editingSupplier.Address.city"
+                :value="value.Address.city"
                 label="Cidade"
                 :rules="[required]"
                 required
+                @input="valueAddressChanged($event, 'city')"
               />
             </v-flex>
             <v-flex xs2>
               <v-combobox
-                v-model="editingSupplier.Address.state"
                 v-mask="stateMask"
+                :value="value.Address.state"
                 :items="states"
                 label="UF"
                 return-masked-value
                 :rules="[required]"
                 required
+                @input="valueAddressChanged($event, 'state')"
               />
             </v-flex>
             <v-flex xs5>
               <v-text-field
-                v-model="editingSupplier.Address.cep"
                 v-mask="cepMask"
+                :value="value.Address.cep"
                 label="CEP"
                 return-masked-value
                 :rules="[required]"
                 required
+                @input="valueAddressChanged($event, 'cep')"
               />
             </v-flex>
           </v-layout>
@@ -158,7 +166,7 @@ export default {
     mask
   },
   props: {
-    editingSupplier: {
+    value: {
       type: Object,
       required: true
     }
@@ -171,6 +179,7 @@ export default {
       stateMask: 'AA',
       cepMask: '#####-###',
       valid: true,
+      editingSupplier: {},
       required: (value) => {
         return (value != null && value !== '') || 'Preenchimento obrigatório!'
       }
@@ -181,7 +190,25 @@ export default {
       return this.editingSupplier.id == null ? 'Novo Fornecedor' : 'Editar Fornecedor'
     }
   },
+  watch: {
+    value (newValue) {
+      if (Object.keys(this.editingSupplier).length === 0 && this.editingSupplier.constructor === Object) {
+       this.editingSupplier = newValue
+      }
+    }
+  },
+  created () {
+    this.editingSupplier = { ...this.value }
+  },
   methods: {
+    valueChanged ($event, fieldName) {
+      this.editingSupplier[fieldName] = $event
+      this.$emit('input', this.editingSupplier)
+    },
+    valueAddressChanged ($event, fieldName) {
+      this.editingSupplier.Address[fieldName] = $event
+      this.$emit('input', this.editingSupplier)
+    },
     close () {
       this.$emit('closing')
     },

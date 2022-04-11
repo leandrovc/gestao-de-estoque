@@ -1,0 +1,8 @@
+SERVER_PORT=8080
+PORT=8082
+DB_NAME='infraestrutura'
+DB_USER='root'
+DB_PASS=''
+DIALECT='mariadb'
+HOST='localhost'
+SERVER_HOST_PORT='http://' + HOST + ':' + SERVER_PORT +'/'

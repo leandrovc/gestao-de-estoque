@@ -42,7 +42,7 @@
     >
       <supplier-picker
         :key="forceRerender"
-        :supplier="filter.supplier"
+        v-model="filter.supplier"
         @supplier-selected="supplierSelected"
       />
     </v-flex>
@@ -52,7 +52,7 @@
     >
       <material-picker
         :key="forceRerender"
-        :material="filter.material"
+        v-model="filter.material"
         @material-selected="materialSelected"
       />
     </v-flex>

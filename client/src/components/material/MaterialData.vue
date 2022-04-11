@@ -6,7 +6,7 @@
     >
       <v-flex xs12>
         <material-picker
-          :material="selectedItem"
+          v-model="selectedItem"
           :rules="rules"
           filled
           :show-add="showAdd"

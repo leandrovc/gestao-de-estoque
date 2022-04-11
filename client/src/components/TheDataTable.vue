@@ -14,7 +14,7 @@
       class="elevation-1 mytable"
       @page-count="pageCount = $event"
     >
-      <template v-slot:item.action="{ item }">
+      <template #[`item.action`]="{ item }">
         <v-icon
           v-if="showEdit"
           small
@@ -39,12 +39,12 @@
           Escolher
         </v-btn>
       </template>
-      <template v-slot:no-data>
+      <template #no-data>
         <v-alert type="error">
           Sua busca não retornou resultados.
         </v-alert>
       </template>
-      <template v-slot:expanded-item="{ item, headers }">
+      <template #expanded-item="{ item }">
         <td :colspan="headers.length">
           <ul
             v-for="line in item.expanded"

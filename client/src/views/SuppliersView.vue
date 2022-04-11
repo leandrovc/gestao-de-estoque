@@ -1,16 +1,16 @@
 <template>
   <v-layout column>
-    <material-search
+    <supplier-search
       :key="resetSearch"
       show-edit
-      @material-selected="editMaterial"
+      @supplier-selected="editSupplier"
     >
-      <template v-slot:add-button>
+      <template #add-button>
         <v-dialog
           v-model="formDialog"
-          max-width="512px"
+          max-width="600px"
         >
-          <template v-slot:activator="{ on }">
+          <template #activator="{ on }">
             <v-btn
               color="accent"
               class="mb-2 black--text"
@@ -19,32 +19,32 @@
               Adicionar
             </v-btn>
           </template>
-          <material-form
+          <supplier-form
             :key="resetSearch"
-            :editing-material="formMaterial"
+            v-model="formSupplier"
             @closing="closeForm"
           />
         </v-dialog>
       </template>
-    </material-search>
+    </supplier-search>
   </v-layout>
 </template>
 
 <script>
-import Material from '@/models/Material'
-import MaterialForm from '@/components/material/MaterialForm'
-import MaterialSearch from '@/components/material/MaterialSearch'
+import Supplier from '@/models/Supplier'
+import SupplierForm from '@/components/supplier/SupplierForm'
+import SupplierSearch from '@/components/supplier/SupplierSearch'
 
 export default {
   components: {
-    MaterialForm,
-    MaterialSearch
+    SupplierForm,
+    SupplierSearch
   },
   data () {
     return {
       resetSearch: false,
       formDialog: false,
-      formMaterial: null
+      formSupplier: null
     }
   },
   watch: {
@@ -53,18 +53,18 @@ export default {
     }
   },
   created () {
-    this.formMaterial = Material.assign()
+    this.formSupplier = Supplier.assign()
   },
   methods: {
-    editMaterial (material) {
-      this.formMaterial = Material.assign(material)
+    editSupplier (supplier) {
+      this.formSupplier = Supplier.assign(supplier)
       this.formDialog = true
     },
     closeForm () {
       this.formDialog = false
     },
     onFormClose () {
-      this.formMaterial = Material.assign()
+      this.formSupplier = Supplier.assign()
       this.resetSearch = !this.resetSearch
     }
   }
