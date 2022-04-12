@@ -5,9 +5,12 @@ import store from './store'
 import { sync } from 'vuex-router-sync'
 import App from './components/App.vue'
 
-require('dotenv').config({ path: require('path').resolve('../.env') })
-
 sync(store, router)
+console.log('process.env.SERVER_HOST_PORT', process.env.SERVER_HOST_PORT)
+console.log('process.env.PORT', process.env.PORT)
+console.log('process.env.NODE_ENV', process.env.NODE_ENV)
+
+process.env.SERVER_HOST_PORT = `http://172.20.176.251:8080/`
 
 new Vue({
   router,
@@ -15,3 +18,8 @@ new Vue({
   vuetify,
   render: h => h(App)
 }).$mount('#app')
+
+console.log('process.env.SERVER_HOST_PORT', process.env.SERVER_HOST_PORT)
+console.log('process.env.PORT', process.env.PORT)
+console.log('process.env.NODE_ENV', process.env.NODE_ENV)
+

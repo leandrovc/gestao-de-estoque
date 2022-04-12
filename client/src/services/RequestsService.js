@@ -30,6 +30,10 @@ export default {
   },
 
   showAll () {
+console.log('SHOW')
+console.log('process.env.SERVER_HOST_PORT', process.env.SERVER_HOST_PORT)
+console.log('process.env.PORT', process.env.PORT)
+console.log('process.env.NODE_ENV', process.env.NODE_ENV)
     return Api().get('requests=showAll')
   },
 

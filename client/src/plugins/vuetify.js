@@ -19,3 +19,5 @@ export default new Vuetify({
     }
   }
 })
+
+console.log('vuetify,js')
