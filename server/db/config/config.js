@@ -1,10 +1,9 @@
-const ck = require('ckey')
 module.exports = {
-  database: ck.DB_NAME,
-  username: ck.DB_USER,
-  password: ck.DB_PASS,
-  dialect: ck.DIALECT,
-  host: ck.HOST,
+  database: process.env.DB_NAME,
+  username: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  dialect: process.env.DIALECT,
+  host: process.env.HOST,
   pool: {
     max: 5,
     min: 0,
