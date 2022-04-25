@@ -27,8 +27,6 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: 'pc'
     }
-  }, {
-    timestamps: false
   })
   return Material
 }

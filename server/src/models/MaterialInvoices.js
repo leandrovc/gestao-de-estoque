@@ -11,8 +11,6 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DECIMAL(8, 2),
       allowNull: false
     }
-  }, {
-    timestamps: false
   })
   return MaterialInvoices
 }

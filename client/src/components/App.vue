@@ -4,13 +4,13 @@
   >
     <the-toolbar />
 
-    <v-content>
+    <v-main>
       <v-layout>
         <v-container>
           <router-view />
         </v-container>
       </v-layout>
-    </v-content>
+    </v-main>
 
     <event-feedback />
   </v-app>

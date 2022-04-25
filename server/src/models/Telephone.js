@@ -3,8 +3,6 @@ module.exports = (sequelize, DataTypes) => {
     number: {
       type: DataTypes.STRING(15)
     }
-  }, {
-    timestamps: false
   })
   return Telephone
 }

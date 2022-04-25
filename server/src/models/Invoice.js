@@ -7,8 +7,6 @@ module.exports = (sequelize, DataTypes) => {
     issueDate: {
       type: DataTypes.DATEONLY
     }
-  }, {
-    timestamps: false
   })
   return Invoice
 }

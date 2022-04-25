@@ -16,8 +16,6 @@ module.exports = (sequelize, DataTypes) => {
     comments: {
       type: DataTypes.STRING
     }
-  }, {
-    timestamps: false
   })
   return Request
 }

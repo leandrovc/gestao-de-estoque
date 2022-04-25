@@ -1,3 +1,5 @@
+require('dotenv').config({ path: '../.env' })
+
 module.exports = {
   database: process.env.DB_NAME,
   username: process.env.DB_USER,
@@ -9,5 +11,9 @@ module.exports = {
     min: 0,
     acquire: 30000,
     idle: 10000
-  }
+  },
+  dialectOptions: {
+    useUTC: false
+  },
+  timezone: '-03:00'
 }

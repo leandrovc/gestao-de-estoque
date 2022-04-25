@@ -4,8 +4,6 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DECIMAL(6, 2),
       allowNull: false
     }
-  }, {
-    timestamps: false
   })
   return MaterialRequests
 }

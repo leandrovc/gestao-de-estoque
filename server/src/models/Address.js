@@ -19,8 +19,6 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(9),
       allowNull: false
     }
-  }, {
-    timestamps: false
   })
   return Address
 }
