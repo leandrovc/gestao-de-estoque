@@ -11,10 +11,14 @@ export default class Request extends ItemFactory {
       comments: '',
       Materials: []
     }
+    let name = {
+      text: 'Registro de Saída',
+      gender: 'o'
+    }
     let decimalProperties = [
       'quantity'
     ]
-    super(RequestsService, emptyRequest, decimalProperties)
+    super(RequestsService, emptyRequest, name, decimalProperties)
   }
   appendMaterial (request) {
     const newMaterial = {

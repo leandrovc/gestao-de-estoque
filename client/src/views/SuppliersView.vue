@@ -31,6 +31,7 @@
 </template>
 
 <script>
+import Supplier from '@/models/Supplier'
 import SupplierForm from '@/components/supplier/SupplierForm'
 import SupplierSearch from '@/components/supplier/SupplierSearch'
 
@@ -43,7 +44,8 @@ export default {
     return {
       resetSearch: false,
       formDialog: false,
-      formSupplier: null
+      formSupplier: null,
+      suppliersFactory: null
     }
   },
   watch: {
@@ -53,6 +55,7 @@ export default {
   },
   created () {
     this.suppliersFactory = new Supplier()
+    this.formSupplier = this.suppliersFactory.getEmptyItem()
   },
   methods: {
     editSupplier (supplier) {

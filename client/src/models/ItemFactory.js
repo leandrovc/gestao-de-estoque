@@ -1,13 +1,17 @@
+import EventBus from '@/event-bus'
+
 export default class ItemFactory {
   /**
    * 
    * @param {Object} _service Service that talks to the DB
    * @param {Object} _emptyItem Contains Item default properties
+   * @param {Object} _itemName Item's name and gender to use in feedback
    * @param {Array} [_decimalProperties=null] Number properties that needs to be converted to show in brazilian standards
    */
-  constructor(_service, _emptyItem, _decimalProperties) {
+  constructor(_service, _emptyItem, _itemName, _decimalProperties) {
     this.service = _service
     this.emptyItem = _emptyItem
+    this.itemName = _itemName
     this.decimalProperties = _decimalProperties
   }
   getEmptyItem() {
@@ -19,7 +23,6 @@ export default class ItemFactory {
       return item
     }
     for (var [key, value] of Object.entries(item)) {
-      //console.log(key + ' ' + value);
       if (Array.isArray(value)) {
         value.forEach((v, i) => {
           item[key][i] = this.formatDecimal(v, isSaving)
@@ -29,15 +32,12 @@ export default class ItemFactory {
         value != null) {
           item[key] = this.formatDecimal(value, isSaving)
       } else {
-        //console.log(key + ' ' + value, this.decimalProperties.indexOf(key))
         if (this.decimalProperties.indexOf(key) > -1) {
-          //console.log(key, item[key], typeof item[key])
           if (isSaving) {
             item[key] = item[key].toString().replace(',', '.')
           } else {
             if (item[key].toString().indexOf('.') > -1) {
               item[key] = item[key].toString().replace('.', ',')
-              //console.log(item[key].length - item[key].indexOf(','), item[key].length, item[key].indexOf(','))
               if (item[key].length - item[key].indexOf(',') == 2) {
                 item[key] += '0'
               }
@@ -45,7 +45,6 @@ export default class ItemFactory {
               item[key] = item[key] + ',00'
             }
           }
-          //console.log(key, item[key], typeof item[key])
         }
       }
     }
@@ -57,12 +56,12 @@ export default class ItemFactory {
       this.formatDecimal(item, true)
       if (item.id == null) {
         await this.service.create(item)
-        result = 'criado'
+        EventBus.$emit('show-feedback', this.itemName.text + ' criad' + this.itemName.gender)
       } else {
         await this.service.update(item.id, item)
-        result = 'atualizado'
+        EventBus.$emit('show-feedback', this.itemName.text + ' atualizad' + this.itemName.gender)
       }
-      callback(result)
+      callback()
     } catch (err) {
       console.log(err)
     }
@@ -70,6 +69,7 @@ export default class ItemFactory {
   deleteItem(item, list) {
     let index = list.indexOf(item)
     this.service.delete(item.id) && list.splice(index, 1)
+    EventBus.$emit('show-feedback', this.itemName.text + ' excluíd' + this.itemName.gender)
   }
   setExpandedInfo (item) {
     return item

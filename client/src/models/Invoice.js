@@ -12,11 +12,15 @@ export default class Invoice extends ItemFactory {
       },
       Materials: []
     }
+    let name = {
+      text: 'Nota Fiscal',
+      gender: 'a'
+    }
     let decimalProperties = [
       'quantity',
       'unitaryValue'
     ]
-    super(InvoicesService, emptyInvoice, decimalProperties)
+    super(InvoicesService, emptyInvoice, name, decimalProperties)
   }
   async save(invoice, callback) {
     invoice.SupplierId = invoice.Supplier.id

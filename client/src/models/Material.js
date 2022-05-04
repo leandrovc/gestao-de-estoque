@@ -12,11 +12,15 @@ export default class Material extends ItemFactory {
       minimumQuantity: null,
       unit: 'un',
     }
+    let name = {
+      text: 'Material',
+      gender: 'o'
+    }
     let decimalProperties = [
       'currentQuantity',
       'minimumQuantity'
     ]
-    super(MaterialsService, emptyMaterial, decimalProperties)
+    super(MaterialsService, emptyMaterial, name, decimalProperties)
   }
   async showLatest() {
     let itemsList

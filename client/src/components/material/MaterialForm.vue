@@ -174,13 +174,9 @@ export default {
     close() {
       this.$emit('closing')
     },
-    onSave(result) {
-      console.log('Material ' + result)
-      this.close()
-    },
     async save() {
       if (this.$refs.form.validate()) {
-        this.materialFactory.save(this.editingMaterial, this.onSave)
+        this.materialFactory.save(this.editingMaterial, this.close)
       }
     },
   },

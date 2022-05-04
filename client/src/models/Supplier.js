@@ -17,7 +17,11 @@ export default class Supplier extends ItemFactory {
       },
       Telephones: []
     }
-    super(SuppliersService, emptySupplier, null)
+    let name = {
+      text: 'Fornecedor(a)',
+      gender: 'o(a)'
+    }
+    super(SuppliersService, emptySupplier, name, null)
   }
   appendTelephone (supplier) {
     const newTelephone = { number: '' }
