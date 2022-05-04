@@ -36,7 +36,7 @@
     <the-data-table
       v-if="!form"
       :headers="headers"
-      :items="invoices.getList()"
+      :items="invoices"
       :loading="loading"
       show-edit
       expand
@@ -64,6 +64,7 @@ export default {
       loading: true,
       editingInvoice: null,
       invoices: null,
+      invoicesFactory: null,
       headers: [
         { text: 'Nº', value: 'number' },
         { text: 'Data de Emissão', value: 'issueDate' },
@@ -73,18 +74,19 @@ export default {
     }
   },
   created () {
-    this.invoices = Invoice.newList()
+    this.invoicesFactory = new Invoice()
+    this.invoices = []
   },
   mounted () {
     this.loadInvoicesTable()
   },
   methods: {
     async getAllInvoices () {
-      await this.invoices.showAll()
+      this.invoices = await this.invoicesFactory.showAll()
     },
     async searchInvoices (filter) {
       this.loading = true
-      await this.invoices.showSearchResult(filter)
+      this.invoices = await this.invoicesFactory.showSearchResult(filter)
       this.loading = false
     },
     loadInvoicesTable () {
@@ -94,15 +96,15 @@ export default {
       this.loading = false
     },
     editItem (invoice) {
-      this.editingInvoice = Invoice.assign(invoice, this.editingInvoice)
+      this.editingInvoice = Object.assign({}, invoice)
       this.form = true
     },
     deleteInvoice (invoice) {
       confirm(`Tem certeza de que deseja EXCLUIR ${invoice.number}?`) &&
-      this.invoices.deleteItem(invoice)
+      this.invoicesFactory.deleteItem(invoice, this.invoices)
     },
     closeForm () {
-      this.editingInvoice = Invoice.assign(null, this.editingInvoice)
+      this.editingInvoice = this.invoicesFactory.getEmptyItem()
       this.form = false
     }
   }

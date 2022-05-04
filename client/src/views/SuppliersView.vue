@@ -31,7 +31,6 @@
 </template>
 
 <script>
-import Supplier from '@/models/Supplier'
 import SupplierForm from '@/components/supplier/SupplierForm'
 import SupplierSearch from '@/components/supplier/SupplierSearch'
 
@@ -53,18 +52,18 @@ export default {
     }
   },
   created () {
-    this.formSupplier = Supplier.assign()
+    this.suppliersFactory = new Supplier()
   },
   methods: {
     editSupplier (supplier) {
-      this.formSupplier = Supplier.assign(supplier)
+      this.formSupplier = Object.assign({}, supplier)
       this.formDialog = true
     },
     closeForm () {
       this.formDialog = false
     },
     onFormClose () {
-      this.formSupplier = Supplier.assign()
+      this.formSupplier = null
       this.resetSearch = !this.resetSearch
     }
   }

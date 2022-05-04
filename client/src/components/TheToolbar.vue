@@ -37,7 +37,7 @@
         text
         to="/requests"
       >
-        Requisições
+        Registros de Saída
       </v-btn>
     </v-toolbar-items>
   </v-app-bar>

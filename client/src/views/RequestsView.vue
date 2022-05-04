@@ -7,7 +7,7 @@
       text
       color="secondary"
     >
-      <v-toolbar-title>REQUISIÇÕES</v-toolbar-title>
+      <v-toolbar-title>REGISTROS DE SAÍDA</v-toolbar-title>
       <v-divider
         class="mx-2"
         inset
@@ -40,7 +40,7 @@
     <the-data-table
       v-if="!form"
       :headers="headers"
-      :items="requests.getList()"
+      :items="requests"
       :loading="loading"
       show-edit
       expand
@@ -70,6 +70,7 @@ export default {
       requests: null,
       applicants: [],
       authorizers: [],
+      requestsFactory: null,
       headers: [
         { text: 'Nº', value: 'number' },
         { text: 'Data de Emissão', value: 'issueDate' },
@@ -81,23 +82,24 @@ export default {
     }
   },
   created () {
-    this.requests = Request.newList()
+    this.requests = []
+    this.requestsFactory = new Request()
   },
   mounted () {
     this.loadRequestsTable()
   },
   methods: {
     async getRequests () {
-      await this.requests.showAll()
+      this.requests = await this.requestsFactory.showAll()
     },
     async searchRequests (filter) {
       this.loading = true
-      await this.requests.showSearchResult(filter)
+      this.requests = await this.requestsFactory.showSearchResult(filter)
       this.loading = false
     },
     async getComboboxItems () {
-      this.applicants = await Request.getApplicantOptions()
-      this.authorizers = await Request.getAuthorizerOptions()
+      this.applicants = await this.requestsFactory.getApplicantOptions()
+      this.authorizers = await this.requestsFactory.getAuthorizerOptions()
     },
     loadRequestsTable () {
       this.loading = true
@@ -107,15 +109,15 @@ export default {
       this.loading = false
     },
     editItem (request) {
-      this.editingRequest = Request.assign(request, this.editingRequest)
+      this.editingRequest = Object.assign({}, request)
       this.form = true
     },
     deleteRequest (request) {
       confirm(`Tem certeza de que deseja EXCLUIR ${request.number}?`) &&
-      this.requests.deleteItem(request)
+      this.requestsFactory.deleteItem(request, this.requests)
     },
     closeForm () {
-      this.editingRequest = Request.assign(null, this.editingRequest)
+      this.editingRequest = this.requestsFactory.getEmptyItem()
       this.form = false
     }
   }

@@ -31,7 +31,6 @@
 </template>
 
 <script>
-import Material from '@/models/Material'
 import MaterialForm from '@/components/material/MaterialForm'
 import MaterialSearch from '@/components/material/MaterialSearch'
 
@@ -52,19 +51,16 @@ export default {
       !value && this.onFormClose()
     }
   },
-  created () {
-    this.formMaterial = Material.assign()
-  },
   methods: {
     editMaterial (material) {
-      this.formMaterial = Material.assign(material)
+      this.formMaterial = Object.assign({}, material)
       this.formDialog = true
     },
     closeForm () {
       this.formDialog = false
     },
     onFormClose () {
-      this.formMaterial = Material.assign()
+      this.formMaterial = null
       this.resetSearch = !this.resetSearch
     }
   }

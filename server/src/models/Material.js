@@ -25,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
     unit: {
       type: DataTypes.STRING(2),
       allowNull: false,
-      defaultValue: 'pc'
+      defaultValue: 'un'
     }
   })
   return Material

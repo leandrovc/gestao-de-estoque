@@ -30,7 +30,7 @@
     <v-card-text>
       <the-data-table
         :headers="headers"
-        :items="materials.getList()"
+        :items="materials"
         :loading="loading"
         :show-edit="showEdit"
         @edit-item="selectMaterial"
@@ -72,11 +72,12 @@ export default {
         { text: 'Unidade', value: 'unit' },
         { text: 'Ações', value: 'action', sortable: false }
       ],
-      materials: null
+      materials: [],
+      materialFactory: null
     }
   },
   created () {
-    this.materials = Material.newList()
+    this.materialFactory = new Material()
   },
   mounted () {
     this.fillInMaterials()
@@ -87,16 +88,16 @@ export default {
     },
     deleteMaterial (material) {
       confirm(`Tem certeza de que deseja EXCLUIR ${material.description}?`) &&
-      this.materials.deleteItem(material)
+      this.materialFactory.deleteItem(material, this.materials)
     },
     async fillInMaterials () {
       this.loading = true
-      await this.materials.showLatest()
+      this.materials = await this.materialFactory.showLatest()
       this.loading = false
     },
     async searchMaterials () {
       this.loading = true
-      await this.materials.showSearchResult(this.searchText)
+      this.materials = await this.materialFactory.showSearchResult(this.searchText)
       this.loading = false
     }
   }

@@ -12,7 +12,7 @@ module.exports = {
       res.send(request)
     } catch (err) {
       res.status(500).send({
-        error: 'Ocorreu um erro ao tentar buscar a requisição.'
+        error: 'Ocorreu um erro ao tentar buscar o registro de saída.'
       })
     }
   },
@@ -28,7 +28,7 @@ module.exports = {
       res.send(request)
     } catch (err) {
       res.status(500).send({
-        error: 'Ocorreu um erro ao tentar criar a requisição.'
+        error: 'Ocorreu um erro ao tentar criar o registro de saída.'
       })
     }
   },
@@ -50,7 +50,7 @@ module.exports = {
       })
     } catch (err) {
       res.status(500).send({
-        error: 'Ocorreu um erro ao tentar buscar a requisição.'
+        error: 'Ocorreu um erro ao tentar buscar o registro de saída.'
       })
     }
   },
@@ -101,7 +101,7 @@ module.exports = {
     } catch (err) {
       console.log(err)
       res.status(500).send({
-        error: 'Ocorreu um erro ao tentar buscar a(s) requisição(ões).'
+        error: 'Ocorreu um erro ao tentar buscar o(s) registro(s) de saída.'
       })
     }
   },
@@ -114,7 +114,7 @@ module.exports = {
       res.send(request)
     } catch (err) {
       res.status(500).send({
-        error: 'Ocorreu um erro ao tentar buscar a(s) requisição(ões).'
+        error: 'Ocorreu um erro ao tentar buscar o(s) registro(s) de saída.'
       })
     }
   },
@@ -131,10 +131,10 @@ module.exports = {
       for (const materialData of requestData.Materials) {
         await MaterialJunctionsController.addMaterialToRequest(materialData, request)
       }
-      res.send('Requisição atualizada!')
+      res.send('Registro de Saída atualizado!')
     } catch (err) {
       res.status(500).send({
-        error: 'Ocorreu um erro ao tentar atualizar a requisição.'
+        error: 'Ocorreu um erro ao tentar atualizar o registro de saída.'
       })
     }
   },
@@ -146,11 +146,11 @@ module.exports = {
           id: requestId
         }
       })
-      res.send('Requisição excluída!')
+      res.send('Registro de Saída excluído!')
     } catch (err) {
       console.log(err)
       res.status(500).send({
-        error: 'Ocorreu um erro ao tentar excluir a requisição.'
+        error: 'Ocorreu um erro ao tentar excluir o registro de saída.'
       })
     }
   }

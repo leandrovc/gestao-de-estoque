@@ -85,6 +85,7 @@ export default {
       resetSearch: false,
       formMaterial: null,
       material: {},
+      materialFactory: null
     }
   },
   watch: {
@@ -98,8 +99,9 @@ export default {
     }
   },
   created () {
-    this.formMaterial = Material.assign()
-    this.material = { ...this.value }
+    this.materialFactory = new Material()
+    this.formMaterial = this.materialFactory.getEmptyItem()
+    this.material = Object.assign({}, this.value)
   },
   methods: {
     materialSelected (selectedMaterial) {
@@ -117,7 +119,7 @@ export default {
       this.formDialog = false
     },
     onFormClose () {
-      this.formMaterial = Material.assign()
+      this.formMaterial = this.materialFactory.getEmptyItem()
       this.resetSearch = !this.resetSearch
     }
   }

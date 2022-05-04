@@ -164,17 +164,19 @@ export default {
       editedRequest: null,
       numberMask: '###.###',
       valid: true,
+      requestsFactory: null,
       required: (value) => !!value || 'Preenchimento obrigatório!',
       minimumLength: (value) => value.length === 7 || 'Quantidade insuficiente de caracteres'
     }
   },
   computed: {
     formTitle () {
-      return this.editedRequest.id == null ? 'Nova Requisição' : 'Editar Requisição'
+      return this.editedRequest.id == null ? 'Novo Registro de Saída' : 'Editar Registro de Saída'
     }
   },
   created () {
-    this.editedRequest = Request.assign(this.request, this.editedRequest)
+    this.requestsFactory = new Request()
+    this.editedRequest = Object.assign({}, this.request)
     this.emptyMaterialSlot = this.request == null
   },
   methods: {
@@ -183,21 +185,21 @@ export default {
     },
     async save () {
       if (this.$refs.form.validate()) {
-        Request.save(this.editedRequest, () => {
+        this.requestsFactory.save(this.editedRequest, () => {
           this.$emit('save')
         })
       }
     },
     appendMaterial () {
-      Request.appendMaterial(this.editedRequest)
+      this.requestsFactory.appendMaterial(this.editedRequest)
       this.emptyMaterialSlot = true
     },
     replaceMaterial (material, index) {
-      Request.replaceMaterial(this.editedRequest.Materials, material, index)
+      this.requestsFactory.replaceMaterial(this.editedRequest.Materials, material, index)
       this.emptyMaterialSlot = false
     },
     deleteMaterial (index) {
-      Request.deleteMaterial(this.editedRequest.Materials, index)
+      this.requestsFactory.deleteMaterial(this.editedRequest.Materials, index)
       this.emptyMaterialSlot = false
     },
     setDate (value) {

@@ -77,12 +77,10 @@
               />
             </v-flex>
             <v-flex xs2>
-              <v-combobox
-                v-mask="stateMask"
+              <v-select
                 :value="value.Address.state"
                 :items="states"
                 label="UF"
-                return-masked-value
                 :rules="[required]"
                 required
                 @input="valueAddressChanged($event, 'state')"
@@ -180,6 +178,7 @@ export default {
       cepMask: '#####-###',
       valid: true,
       editingSupplier: {},
+      suppliersFactory: null,
       required: (value) => {
         return (value != null && value !== '') || 'Preenchimento obrigatório!'
       }
@@ -198,7 +197,8 @@ export default {
     }
   },
   created () {
-    this.editingSupplier = { ...this.value }
+    this.suppliersFactory = new Supplier()
+    this.editingSupplier = Object.assign({}, this.value)
   },
   methods: {
     valueChanged ($event, fieldName) {
@@ -214,14 +214,15 @@ export default {
     },
     async save () {
       if (this.$refs.form.validate()) {
-        Supplier.save(this.editingSupplier, this.close)
+        this.suppliersFactory.save(this.editingSupplier, this.close)
       }
     },
     appendTelephone () {
-      Supplier.appendTelephone(this.editingSupplier)
+      this.suppliersFactory.appendTelephone(this.editingSupplier)
     },
     deleteTelephone (telephone) {
-      Supplier.deleteTelephone(this.editingSupplier, telephone)
+      confirm(`Tem certeza de que deseja EXCLUIR ${telephone.number}?`) &&
+        this.suppliersFactory.deleteTelephone(this.editingSupplier, telephone)
     }
   }
 }

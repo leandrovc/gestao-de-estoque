@@ -80,6 +80,7 @@ export default {
       formDialog: false,
       formSupplier: null,
       supplier: {},
+      suppliersFactory: null
     }
   },
   watch: {
@@ -93,8 +94,9 @@ export default {
     }
   },
   created () {
-    this.formSupplier = Supplier.assign()
-    this.supplier = { ...this.value }
+    this.suppliersFactory = new Supplier()
+    this.formSupplier = this.suppliersFactory.getEmptyItem()
+    this.supplier = Object.assign({}, this.value)
   },
   methods: {
     supplierSelected (selectedSupplier) {
@@ -112,7 +114,7 @@ export default {
       this.formDialog = false
     },
     onFormClose () {
-      this.formSupplier = Supplier.assign()
+      this.formSupplier = this.suppliersFactory.getEmptyItem()
       this.resetSearch = !this.resetSearch
     }
   }

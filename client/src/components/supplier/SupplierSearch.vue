@@ -30,7 +30,7 @@
     <v-card-text>
       <the-data-table
         :headers="headers"
-        :items="suppliers.getList()"
+        :items="suppliers"
         :loading="loading"
         :show-edit="showEdit"
         expand
@@ -65,11 +65,13 @@ export default {
         { text: 'CNPJ', value: 'cnpj' },
         { text: 'Ações', value: 'action', sortable: false }
       ],
-      suppliers: null
+      suppliers: null,
+      suppliersFactory: null
     }
   },
   created () {
-    this.suppliers = Supplier.newList()
+    this.suppliersFactory = new Supplier()
+    this.suppliers = []
   },
   mounted () {
     this.getSuppliers()
@@ -80,16 +82,16 @@ export default {
     },
     deleteSupplier (supplier) {
       confirm(`Tem certeza de que deseja EXCLUIR ${supplier.socialName}?`) &&
-      this.suppliers.deleteItem(supplier)
+      this.suppliersFactory.deleteItem(supplier, this.suppliers)
     },
     async getSuppliers () {
       this.loading = true
-      await this.suppliers.showAll()
+      this.suppliers = await this.suppliersFactory.showAll()
       this.loading = false
     },
     async searchSuppliers () {
       this.loading = true
-      await this.suppliers.showSearchResult(this.searchText)
+      this.suppliers = await this.suppliersFactory.showSearchResult(this.searchText)
       this.loading = false
     }
   }

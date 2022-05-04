@@ -167,6 +167,7 @@ export default {
       editedInvoice: null,
       numberMask: '###.###',
       valid: true,
+      invoiceFactory: null,
       required: (value) => !!value || 'Preenchimento obrigatório!',
       minimumLength: (value) => value.length === 7 || 'Quantidade insuficiente de caracteres'
     }
@@ -177,7 +178,8 @@ export default {
     }
   },
   created () {
-    this.editedInvoice = Invoice.assign(this.invoice, this.editedInvoice)
+    this.invoiceFactory = new Invoice()
+    this.editedInvoice = Object.assign({}, this.invoice)
     this.emptyMaterialSlot = this.invoice == null
   },
   methods: {
@@ -186,21 +188,21 @@ export default {
     },
     async save () {
       if (this.$refs.form.validate()) {
-        Invoice.save(this.editedInvoice, () => {
+        this.invoiceFactory.save(this.editedInvoice, () => {
           this.$emit('save')
         })
       }
     },
     appendMaterial () {
-      Invoice.appendMaterial(this.editedInvoice)
+      this.invoiceFactory.appendMaterial(this.editedInvoice)
       this.emptyMaterialSlot = true
     },
     replaceMaterial (material, index) {
-      Invoice.replaceMaterial(this.editedInvoice.Materials, material, index)
+      this.invoiceFactory.replaceMaterial(this.editedInvoice.Materials, material, index)
       this.emptyMaterialSlot = false
     },
     deleteMaterial (index) {
-      Invoice.deleteMaterial(this.editedInvoice.Materials, index)
+      this.invoiceFactory.deleteMaterial(this.editedInvoice.Materials, index)
       this.emptyMaterialSlot = false
     },
     supplierSelected (selectedSupplier) {
