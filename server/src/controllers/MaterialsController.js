@@ -19,7 +19,7 @@ module.exports = {
       res.send(material)
     } catch (err) {
       res.status(500).send({
-        error: 'Ocorreu um erro ao tentar criar o material.'
+        error: err.original.text
       })
     }
   },
@@ -75,10 +75,28 @@ module.exports = {
   async getLatest (req, res) {
     try {
       let material = await Material.findAll({
-        limit: 5,
+        limit: 10,
         order: Db.sequelize.literal('id DESC')
       })
       res.send(material)
+    } catch (err) {
+      res.status(500).send({
+        error: 'Ocorreu um erro ao tentar buscar o(s) material(is).'
+      })
+    }
+  },
+  async getLastGroupCode (req, res) {
+    try {
+      let groupToSearch = req.query['group']
+      let materialCode = await Material.findAll({
+        attributes: [ 'code' ],
+        where: {
+          group: groupToSearch
+        },
+        limit: 1,
+        order: Db.sequelize.literal('code DESC')
+      })
+      res.send(materialCode)
     } catch (err) {
       res.status(500).send({
         error: 'Ocorreu um erro ao tentar buscar o(s) material(is).'
@@ -95,7 +113,7 @@ module.exports = {
       res.send(material)
     } catch (err) {
       res.status(500).send({
-        error: 'Ocorreu um erro ao tentar atualizar o material.'
+        error: err.original.text
       })
     }
   },

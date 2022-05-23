@@ -52,7 +52,6 @@ export default class ItemFactory {
   }
   async save(item, callback) {
     try {
-      let result
       this.formatDecimal(item, true)
       if (item.id == null) {
         await this.service.create(item)
@@ -63,7 +62,7 @@ export default class ItemFactory {
       }
       callback()
     } catch (err) {
-      console.log(err)
+      EventBus.$emit('show-error', err.response.data.error)
     }
   }
   deleteItem(item, list) {

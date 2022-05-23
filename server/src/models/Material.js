@@ -10,7 +10,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     code: {
       type: DataTypes.STRING(5),
-      allowNull: false
+      allowNull: false,
+      unique: true
     },
     currentQuantity: {
       type: DataTypes.DECIMAL(6, 2),

@@ -15,6 +15,8 @@ module.exports = (app) => {
     MaterialsController.show)
   app.get('/materials=getLatest',
     MaterialsController.getLatest)
+  app.get('/materials=getLastGroupCode?',
+    MaterialsController.getLastGroupCode)
   app.put('/materials/:materialId',
     MaterialsController.update)
   app.delete('/materials/:materialId',

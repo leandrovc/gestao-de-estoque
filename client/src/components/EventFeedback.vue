@@ -4,11 +4,10 @@
     persistent
     inset
     hide-overlay
+    prominent
   >
     <v-alert
-      outlined
-      type="success"
-      text
+      :type="type"
     >
       {{ message }}
     </v-alert>
@@ -23,19 +22,29 @@ export default {
     return {
       sheet: false,
       message: '',
-      timeout: null
+      timeout: null,
+      type: 'success'
     }
   },
   created () {
     EventBus.$on('show-feedback', this.showFeedback)
+    EventBus.$on('show-error', this.showError)
   },
   methods: {
-    showFeedback (msg) {
+    showAlert (msg) {
       if (this.sheet) clearTimeout(this.timeout)
 
       this.sheet = true
       this.message = msg
       this.timeout = setTimeout(() => (this.sheet = false), 3000)
+    },
+    showFeedback (msg) {
+      this.type = 'success'
+      this.showAlert(msg) 
+    },
+    showError (msg) {
+      this.type = 'error'
+      this.showAlert(msg) 
     }
   }
 }

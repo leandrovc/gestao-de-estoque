@@ -167,9 +167,12 @@ export default {
         : this.materialFactory.getEmptyItem()
   },
   methods: {
-    valueChanged($event, fieldName) {
+    async valueChanged($event, fieldName) {
       this.editingMaterial[fieldName] = $event
       this.$emit('input', this.editingMaterial)
+      if (fieldName == 'group') {
+        this.editingMaterial.code = await this.materialFactory.getNewGroupCode($event)
+      }
     },
     close() {
       this.$emit('closing')

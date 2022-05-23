@@ -24,7 +24,7 @@
           edit
         </v-icon>
         <v-icon
-          v-if="showEdit"
+          v-if="showEdit && !hideDelete"
           small
           @click="$emit('delete-item', item)"
         >
@@ -95,7 +95,8 @@ export default {
       page: 1,
       pageCount: 10,
       itemsPerPage: 10,
-      expanded: []
+      expanded: [],
+      hideDelete: process.env.NODE_ENV == 'production'
     }
   }
 }
