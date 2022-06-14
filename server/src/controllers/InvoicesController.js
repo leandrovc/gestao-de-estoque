@@ -2,6 +2,7 @@ const Db = require('../models/index')
 const { Invoice, Material, Supplier } = Db
 const Op = Db.Sequelize.Op
 const MaterialJunctionsController = require('./MaterialJunctionsController')
+const MaterialsController = require('./MaterialsController')
 
 module.exports = {
   async show (req, res) {
@@ -24,6 +25,7 @@ module.exports = {
       )
       for (const materialData of invoiceData.Materials) {
         await MaterialJunctionsController.addMaterialToInvoice(materialData, invoice)
+        await MaterialsController.addToQuantity(materialData.id, parseInt(materialData.MaterialInvoices.quantity, 10))
       }
       res.send(invoice)
     } catch (err) {

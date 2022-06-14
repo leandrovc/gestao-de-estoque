@@ -27,6 +27,7 @@ module.exports = {
       res.send(supplier)
     } catch (err) {
       // TODO handle SequelizeUniqueConstraintError
+      console.log(err)
       res.status(500).send({
         error: 'Ocorreu um erro ao tentar criar o fornecedor.'
       })

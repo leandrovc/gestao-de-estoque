@@ -138,5 +138,19 @@ module.exports = {
     } catch (err) {
       console.log('Ocorreu um erro ao tentar buscar o material.', err)
     }
+  },
+  async addToQuantity (id, quantity) {
+    this.find(id).then(material => {
+      console.log('-------------- material =>', material.dataValues)
+      let m = material.dataValues
+      m.currentQuantity += quantity
+      console.log('-------------- matetial update', m)
+      let materialUpdated = Material.update(m, {
+        where: {
+          id: id
+        }
+      })
+      console.log(materialUpdated)
+    })
   }
 }
