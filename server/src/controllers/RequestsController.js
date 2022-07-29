@@ -2,6 +2,7 @@ const Db = require('../models/index')
 const { Request, Material } = Db
 const Op = Db.Sequelize.Op
 const MaterialJunctionsController = require('./MaterialJunctionsController')
+const MaterialsController = require('./MaterialsController')
 
 module.exports = {
   async show (req, res) {
@@ -19,16 +20,22 @@ module.exports = {
   async create (req, res) {
     try {
       let requestData = req.body
+      for (const materialData of requestData.Materials) {
+        if (!await MaterialsController.quantityAvailable(materialData.id, parseFloat(materialData.MaterialRequests.quantity))) {
+          throw new Error('Não há quantidade suficiente do material em estoque.')
+        }
+      }
       let request = await Request.create(
         requestData
       )
       for (const materialData of requestData.Materials) {
         await MaterialJunctionsController.addMaterialToRequest(materialData, request)
+        await MaterialsController.removeFromInventory(materialData.id, parseFloat(materialData.MaterialRequests.quantity))
       }
       res.send(request)
     } catch (err) {
       res.status(500).send({
-        error: 'Ocorreu um erro ao tentar criar o registro de saída.'
+        error: `Erro ao criar o registro de saída. ${err}`
       })
     }
   },

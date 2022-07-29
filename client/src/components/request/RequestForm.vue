@@ -93,7 +93,7 @@
             hint="9999,99"
             return-masked-value
             persistent-hint
-            :rules="[required]"
+            :rules="[required,(value) => notBiggerThan(value, material.currentQuantity)]"
             required
           />
         </v-flex>
@@ -166,7 +166,18 @@ export default {
       valid: true,
       requestsFactory: null,
       required: (value) => !!value || 'Preenchimento obrigatório!',
-      minimumLength: (value) => value.length === 7 || 'Quantidade insuficiente de caracteres'
+      minimumLength: (value) => value.length === 7 || 'Quantidade insuficiente de caracteres',
+      notBiggerThan: (value, currentQuantity) => {
+        if (value == null || currentQuantity == null) {
+          return false
+        }
+        var floatValue = parseFloat(value.toString().replace(',', '.'))
+        var floatCurrentQuantity = parseFloat(currentQuantity.toString().replace(',', '.'))
+        if (floatValue > floatCurrentQuantity) {
+          return 'Quantidade em estoque insuficiente!'
+        }
+        return true
+        }
     }
   },
   computed: {
