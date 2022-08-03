@@ -68,14 +68,16 @@ export default {
       headers: [
         { text: 'Nº', value: 'number' },
         { text: 'Data de Emissão', value: 'issueDate' },
-        { text: 'Fornecedor', value: 'Supplier.socialName' },
-        { text: 'Ações', value: 'action', sortable: false }
+        { text: 'Fornecedor', value: 'Supplier.socialName' }
       ]
     }
   },
   created () {
     this.invoicesFactory = new Invoice()
     this.invoices = []
+    if (process.env.NODE_ENV != 'production') {
+      this.headers.push({ text: 'Ações', value: 'action', sortable: false })
+    }
   },
   mounted () {
     this.loadInvoicesTable()

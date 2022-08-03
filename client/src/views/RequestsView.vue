@@ -76,14 +76,16 @@ export default {
         { text: 'Data de Emissão', value: 'issueDate' },
         { text: 'Requerente', value: 'applicant' },
         { text: 'Autorizador', value: 'authorizer' },
-        { text: 'Comentários', value: 'comments' },
-        { text: 'Ações', value: 'action', sortable: false }
+        { text: 'Comentários', value: 'comments' }
       ]
     }
   },
   created () {
     this.requests = []
     this.requestsFactory = new Request()
+    if (process.env.NODE_ENV != 'production') {
+      this.headers.push({ text: 'Ações', value: 'action', sortable: false })
+    }
   },
   mounted () {
     this.loadRequestsTable()
