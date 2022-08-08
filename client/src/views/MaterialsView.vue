@@ -5,6 +5,15 @@
       show-edit
       @material-selected="editMaterial"
     >
+      <template #minimum-button>
+        <v-btn
+          color="secondary"
+          class="ma-2 black--text"
+          @click="searchOnMinimum"
+        >
+          Atual &lt;= Mínima
+        </v-btn>
+      </template>
       <template #add-button>
         <v-dialog
           v-model="formDialog"
@@ -13,7 +22,7 @@
           <template #activator="{ on }">
             <v-btn
               color="accent"
-              class="mb-2 black--text"
+              class="ma-2 black--text"
               v-on="on"
             >
               Adicionar
@@ -33,6 +42,7 @@
 <script>
 import MaterialForm from '@/components/material/MaterialForm'
 import MaterialSearch from '@/components/material/MaterialSearch'
+import EventBus from '@/event-bus'
 
 export default {
   components: {
@@ -62,6 +72,9 @@ export default {
     onFormClose () {
       this.formMaterial = null
       this.resetSearch = !this.resetSearch
+    },
+    searchOnMinimum () {
+      EventBus.$emit('show-low-quantity')
     }
   }
 }

@@ -103,6 +103,22 @@ module.exports = {
       })
     }
   },
+  async getLowQuantity (req, res) {
+    try {
+      let material = await Material.findAll({
+        where: {
+          currentQuantity: {
+            [Op.lte]: Db.sequelize.col('minimumQuantity')
+          }
+        }
+      })
+      res.send(material)
+    } catch (err) {
+      res.status(500).send({
+        error: 'Ocorreu um erro ao tentar buscar o(s) material(is).'
+      })
+    }
+  },
   async update (req, res) {
     try {
       let material = await Material.update(req.body, {

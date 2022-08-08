@@ -35,4 +35,11 @@ export default class Material extends ItemFactory {
     code = parseInt(code, 10) + 1
     return code
   }
+  async showLowQuantityMaterials() {
+    let itemsList = (await MaterialsService.getLowQuantity()).data
+    itemsList.forEach((item) => {
+      item = this.formatDecimal(item, false)
+    })
+    return itemsList
+  }
 }

@@ -19,6 +19,9 @@ export default {
   getLastGroupCode (group) {
     return Api().get(`materials=getLastGroupCode?group=${group}`)
   },
+  getLowQuantity () {
+    return Api().get(`materials=getLowQuantity`)
+  },
   update (materialId, material) {
     return Api().put(`materials/${materialId}`, material)
   },

@@ -10,7 +10,7 @@
         vertical
       />
       <v-flex
-        xs6
+        xs4
         offset-xs1
       >
         <v-text-field
@@ -25,6 +25,7 @@
         />
       </v-flex>
       <v-spacer />
+      <slot name="minimum-button" />
       <slot name="add-button" />
     </v-card-title>
     <v-card-text>
@@ -44,6 +45,7 @@
 <script>
 import Material from '@/models/Material'
 import TheDataTable from '@/components/TheDataTable'
+import EventBus from '@/event-bus'
 
 export default {
   components: {
@@ -78,6 +80,7 @@ export default {
   },
   created () {
     this.materialFactory = new Material()
+    EventBus.$on('show-low-quantity', this.showLowQuantityMaterials)
   },
   mounted () {
     this.fillInMaterials()
@@ -98,6 +101,11 @@ export default {
     async searchMaterials () {
       this.loading = true
       this.materials = await this.materialFactory.showSearchResult(this.searchText)
+      this.loading = false
+    },
+    async showLowQuantityMaterials () {
+      this.loading = true
+      this.materials = await this.materialFactory.showLowQuantityMaterials()
       this.loading = false
     }
   }

@@ -17,6 +17,8 @@ module.exports = (app) => {
     MaterialsController.getLatest)
   app.get('/materials=getLastGroupCode?',
     MaterialsController.getLastGroupCode)
+  app.get('/materials=getLowQuantity',
+    MaterialsController.getLowQuantity)
   app.put('/materials/:materialId',
     MaterialsController.update)
   app.delete('/materials/:materialId',
